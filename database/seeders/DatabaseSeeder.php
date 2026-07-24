@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -12,14 +14,61 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Seed the application's database.
+     *
+     * Seeders are organized by module and must run in dependency order.
+     * Production seeders always run. Test fixtures are restricted to
+     * non-production environments to prevent contaminating production data.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // ── M1: Users & RBAC ─────────────────────────────────────────────────
+        // RolePermissionSeeder must run before UserSeeder (role assignment dependency)
+        $this->call([
+            RolePermissionSeeder::class,
+            UserSeeder::class,
         ]);
+
+        // ── M2: Foundation ────────────────────────────────────────────────────
+        $this->call([
+            VillageProfileSeeder::class,
+            SettingSeeder::class,
+        ]);
+
+        // ── M3: Articles (News) ────────────────────────────────────────────────
+        $this->call([
+            // M3 (News Management)
+            ArticleCategorySeeder::class,
+            ArticleSeeder::class,
+
+            // M4 (Announcements & Agenda)
+            AnnouncementSeeder::class,
+            AgendaSeeder::class,
+
+            // M5 (Apparatus)
+            ApparatusPositionSeeder::class,
+            ApparatusSeeder::class,
+
+            // M6 (Gallery & Albums)
+            GalleryAlbumSeeder::class,
+            GalleryPhotoSeeder::class,
+            VideoSeeder::class,
+
+            // M7 (Potentials)
+            UmkmCategorySeeder::class,
+            UmkmSeeder::class,
+            TourismCategorySeeder::class,
+            TourismSeeder::class,
+            ProductCategorySeeder::class,
+            ProductSeeder::class,
+        ]);
+
+        // ── Development / testing fixtures ────────────────────────────────────
+        // Never executed in production — prevents test data from contaminating live data.
+        if (! app()->isProduction()) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ]);
+        }
     }
 }
