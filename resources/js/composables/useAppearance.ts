@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use stores/layoutStore.ts instead. All references have been moved.
+ */
 import type { ComputedRef, Ref } from 'vue';
 import { computed, onMounted, ref } from 'vue';
 import type { Appearance, ResolvedAppearance } from '@/types';

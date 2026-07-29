@@ -38,7 +38,10 @@ return new class extends Migration
             $table->index(['status', 'published_at', 'id', 'deleted_at'], 'articles_public_pagination_idx');
             $table->index(['category_id', 'status', 'deleted_at'], 'articles_category_status_idx');
             $table->index(['is_featured', 'status', 'deleted_at'], 'articles_featured_status_idx');
-            $table->fullText(['title', 'excerpt', 'content'], 'articles_fulltext_idx');
+            
+            if (\Illuminate\Support\Facades\DB::getDriverName() !== 'sqlite') {
+                $table->fullText(['title', 'excerpt', 'content'], 'articles_fulltext_idx');
+            }
         });
     }
 

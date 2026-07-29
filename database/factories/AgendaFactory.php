@@ -38,9 +38,12 @@ final class AgendaFactory extends Factory
             'title' => 'Agenda '.$this->faker->words(3, true),
             'content' => '<p>'.implode('</p><p>', $this->faker->paragraphs(2)).'</p>',
             'location' => $this->faker->address(),
+            'location_url' => $this->faker->optional(0.5)->url(),
+            'featured_image_path' => null,
             'start_datetime' => $start,
             'end_datetime' => $end,
             'status' => ArticleStatus::Draft,
+            'is_cancelled' => false,
             'published_at' => null,
         ];
     }
@@ -85,6 +88,16 @@ final class AgendaFactory extends Factory
             'start_datetime' => $start,
             'end_datetime' => $end,
             'published_at' => (clone $start)->subWeeks(2),
+        ]);
+    }
+
+    /**
+     * Indicate that the agenda is cancelled.
+     */
+    public function cancelled(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_cancelled' => true,
         ]);
     }
 }

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ArticleStatus;
+use App\Observers\AgendaObserver;
 use App\Traits\HasUlid;
 use App\Traits\HasUniqueSlug;
 use Database\Factories\AgendaFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
+#[ObservedBy(AgendaObserver::class)]
 final class Agenda extends Model
 {
     /** @use HasFactory<AgendaFactory> */
@@ -46,13 +49,17 @@ final class Agenda extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'user_id',
         'title',
         'slug',
         'content',
         'location',
+        'featured_image_path',
+        'location_url',
         'start_datetime',
         'end_datetime',
         'status',
+        'is_cancelled',
         'published_at',
     ];
 
@@ -63,6 +70,7 @@ final class Agenda extends Model
     {
         return [
             'status' => ArticleStatus::class,
+            'is_cancelled' => 'boolean',
             'start_datetime' => 'datetime',
             'end_datetime' => 'datetime',
             'published_at' => 'datetime',
@@ -89,6 +97,27 @@ final class Agenda extends Model
     public function getSlugSourceColumn(): string
     {
         return 'title';
+    }
+
+    /**
+     * Get the dynamic event status based on datetime and cancellation.
+     */
+    public function getEventStatusAttribute(): string
+    {
+        if ($this->is_cancelled) {
+            return 'cancelled';
+        }
+
+        $now = now();
+        if ($now->isBefore($this->start_datetime)) {
+            return 'upcoming';
+        }
+
+        if ($this->end_datetime && $now->isAfter($this->end_datetime)) {
+            return 'finished';
+        }
+
+        return 'ongoing';
     }
 
     // ──────────────────────────────────────────────────────────────────────────

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\VillageProfileObserver;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,6 +52,7 @@ use Illuminate\Support\Facades\Storage;
  * @property CarbonImmutable|null $updated_at
  * @property-read Collection<int, VillageMission> $missions
  */
+#[ObservedBy(VillageProfileObserver::class)]
 final class VillageProfile extends Model
 {
     /**

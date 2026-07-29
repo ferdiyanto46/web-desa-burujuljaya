@@ -19,9 +19,9 @@ import {
     InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { Spinner } from '@/components/ui/spinner';
-import { useAppearance } from '@/composables/useAppearance';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { confirm } from '@/routes/two-factor';
+import { useLayoutStore } from '@/stores/layoutStore';
 import type { TwoFactorConfigContent } from '@/types';
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
     twoFactorEnabled: boolean;
 };
 
-const { resolvedAppearance } = useAppearance();
+const layoutStore = useLayoutStore();
 
 const props = defineProps<Props>();
 const isOpen = defineModel<boolean>('isOpen');
@@ -175,7 +175,7 @@ watch(
                                         class="flex aspect-square size-full items-center justify-center"
                                         :style="{
                                             filter:
-                                                resolvedAppearance === 'dark'
+                                                layoutStore.isDark
                                                     ? 'invert(1) brightness(1.5)'
                                                     : undefined,
                                         }"

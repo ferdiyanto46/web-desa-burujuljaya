@@ -60,6 +60,26 @@ class DatabaseSeeder extends Seeder
             TourismSeeder::class,
             ProductCategorySeeder::class,
             ProductSeeder::class,
+
+            // M8 (Statistics)
+            StatisticCategorySeeder::class,
+            VillageStatisticSeeder::class,
+
+            // M9 (Documents)
+            DocumentCategorySeeder::class,
+            DocumentSeeder::class,
+            ComplaintCategorySeeder::class,
+            ComplaintSeeder::class,
+            ComplaintAttachmentSeeder::class,
+            ComplaintHistorySeeder::class,
+
+            // M11 (Audit)
+            ActivityLogSeeder::class,
+
+            // M12 (Website Mgmt)
+            BannerSeeder::class,
+            FaqSeeder::class,
+            ContactMessageSeeder::class,
         ]);
 
         // ── Development / testing fixtures ────────────────────────────────────

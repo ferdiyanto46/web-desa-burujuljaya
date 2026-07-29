@@ -16,7 +16,7 @@ final class TourismSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::all();
+        $users = User::inRandomOrder()->limit(20)->get();
         $categories = TourismCategory::all();
 
         if ($users->isEmpty() || $categories->isEmpty()) {

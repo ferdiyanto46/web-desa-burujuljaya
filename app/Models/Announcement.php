@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ArticleStatus;
+use App\Observers\AnnouncementObserver;
 use App\Traits\HasUlid;
 use App\Traits\HasUniqueSlug;
 use Database\Factories\AnnouncementFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
+#[ObservedBy(AnnouncementObserver::class)]
 final class Announcement extends Model
 {
     /** @use HasFactory<AnnouncementFactory> */

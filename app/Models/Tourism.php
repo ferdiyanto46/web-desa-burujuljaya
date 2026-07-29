@@ -54,6 +54,14 @@ final class Tourism extends Model
     }
 
     /**
+     * Scope a query to only include active tourism.
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('is_active', true);
+    }
+
+    /**
      * The slug source field.
      */
     public function slugSource(): string

@@ -18,11 +18,11 @@ return new class extends Migration
             $table->char('ulid', 26)->unique();
             $table->foreignId('user_id')->constrained('users')->restrictOnDelete();
             $table->foreignId('category_id')->constrained('product_categories')->restrictOnDelete();
-            $table->foreignId('umkm_id')->nullable()->constrained('umkm')->cascadeOnDelete();
+            $table->foreignId('umkm_id')->nullable()->constrained('umkm')->restrictOnDelete();
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->integer('price')->nullable();
+            $table->unsignedInteger('price')->nullable();
             $table->string('unit', 50)->nullable();
             $table->string('cover_image', 500)->nullable();
             $table->boolean('is_active')->default(true);

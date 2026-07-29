@@ -38,5 +38,12 @@ final class AgendaSeeder extends Seeder
         Agenda::factory()
             ->count(2)
             ->create(['user_id' => $author->id]);
+
+        // 1 cancelled agenda
+        Agenda::factory()
+            ->count(1)
+            ->upcoming()
+            ->cancelled()
+            ->create(['user_id' => $author->id]);
     }
 }

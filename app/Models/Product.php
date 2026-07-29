@@ -57,6 +57,14 @@ final class Product extends Model
     }
 
     /**
+     * Scope a query to only include active product.
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('is_active', true);
+    }
+
+    /**
      * The slug source field.
      */
     public function slugSource(): string

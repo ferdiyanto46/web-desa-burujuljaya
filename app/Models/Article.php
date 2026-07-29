@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ArticleStatus;
+use App\Observers\ArticleObserver;
 use App\Traits\HasUlid;
 use App\Traits\HasUniqueSlug;
+use Carbon\CarbonImmutable;
 use Database\Factories\ArticleFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,8 +39,9 @@ use Illuminate\Support\Carbon;
  * @property string|null $og_image_path
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
+ * @property CarbonImmutable|null $deleted_at
  */
+#[ObservedBy(ArticleObserver::class)]
 final class Article extends Model
 {
     /** @use HasFactory<ArticleFactory> */
@@ -51,6 +55,7 @@ final class Article extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'user_id',
         'category_id',
         'title',
         'slug',

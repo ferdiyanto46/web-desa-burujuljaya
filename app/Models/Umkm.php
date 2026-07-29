@@ -59,6 +59,14 @@ final class Umkm extends Model
     }
 
     /**
+     * Scope a query to only include active umkm.
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('is_active', true);
+    }
+
+    /**
      * The slug source field.
      */
     public function slugSource(): string

@@ -31,8 +31,11 @@ return new class extends Migration
             $table->softDeletes();
 
             // Index yang dioptimalkan sesuai M-01
-            $table->index(['status', 'deleted_at', 'is_pinned', 'published_at'], 'announcements_public_idx');
-            $table->fullText(['title', 'excerpt', 'content'], 'announcements_fulltext_idx');
+            $table->index(['is_pinned', 'status', 'deleted_at'], 'announcements_pinned_status_idx');
+            
+            if (\Illuminate\Support\Facades\DB::getDriverName() !== 'sqlite') {
+                $table->fullText(['title', 'excerpt', 'content'], 'announcements_fulltext_idx');
+            }
         });
     }
 

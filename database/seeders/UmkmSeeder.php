@@ -26,7 +26,7 @@ final class UmkmSeeder extends Seeder
         // We can't easily recycle Collections with multiple models in the factory definition
         // directly like `->recycle($users)`. Wait, we can if we recycle the model instances, not the IDs.
         // Let's get the collections of models instead of IDs.
-        $users = User::all();
+        $users = User::inRandomOrder()->limit(20)->get();
         $categories = UmkmCategory::all();
 
         if ($users->isEmpty() || $categories->isEmpty()) {

@@ -17,9 +17,9 @@ final class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::all();
+        $users = User::inRandomOrder()->limit(20)->get();
         $categories = ProductCategory::all();
-        $umkms = Umkm::all();
+        $umkms = Umkm::inRandomOrder()->limit(50)->get();
 
         if ($users->isEmpty() || $categories->isEmpty()) {
             return;
