@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Observers\AnnouncementObserver;
 use App\Traits\HasUlid;
 use App\Traits\HasUniqueSlug;
@@ -27,13 +27,40 @@ use Illuminate\Support\Carbon;
  * @property string $slug
  * @property string|null $excerpt
  * @property string $content IMPORTANT: Raw HTML. Must be sanitized via HTML Purifier at the Service Layer.
- * @property ArticleStatus $status
+ * @property PublicationStatus $status
  * @property bool $is_pinned
- * @property Carbon|null $end_date
+ * @property string|null $featured_image_path
  * @property Carbon|null $published_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read User|null $author
+ *
+ * @method static Builder<static>|Announcement active()
+ * @method static \Database\Factories\AnnouncementFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Announcement newModelQuery()
+ * @method static Builder<static>|Announcement newQuery()
+ * @method static Builder<static>|Announcement onlyTrashed()
+ * @method static Builder<static>|Announcement query()
+ * @method static Builder<static>|Announcement whereContent($value)
+ * @method static Builder<static>|Announcement whereCreatedAt($value)
+ * @method static Builder<static>|Announcement whereDeletedAt($value)
+ * @method static Builder<static>|Announcement whereExcerpt($value)
+ * @method static Builder<static>|Announcement whereFeaturedImagePath($value)
+ * @method static Builder<static>|Announcement whereId($value)
+ * @method static Builder<static>|Announcement whereIsPinned($value)
+ * @method static Builder<static>|Announcement wherePublishedAt($value)
+ * @method static Builder<static>|Announcement whereSlug($value)
+ * @method static Builder<static>|Announcement whereStatus($value)
+ * @method static Builder<static>|Announcement whereTitle($value)
+ * @method static Builder<static>|Announcement whereUlid($value)
+ * @method static Builder<static>|Announcement whereUpdatedAt($value)
+ * @method static Builder<static>|Announcement whereUserId($value)
+ * @method static Builder<static>|Announcement withDetails()
+ * @method static Builder<static>|Announcement withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Announcement withoutTrashed()
+ *
+ * @mixin \Eloquent
  */
 #[ObservedBy(AnnouncementObserver::class)]
 final class Announcement extends Model
@@ -49,13 +76,14 @@ final class Announcement extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'user_id',
         'title',
         'slug',
         'excerpt',
         'content',
         'status',
         'is_pinned',
-        'end_date',
+        'featured_image_path',
         'published_at',
     ];
 
@@ -65,9 +93,8 @@ final class Announcement extends Model
     protected function casts(): array
     {
         return [
-            'status' => ArticleStatus::class,
+            'status' => PublicationStatus::class,
             'is_pinned' => 'boolean',
-            'end_date' => 'datetime',
             'published_at' => 'datetime',
         ];
     }
@@ -117,10 +144,8 @@ final class Announcement extends Model
      */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', ArticleStatus::Published)
-            ->where(function (Builder $q) {
-                $q->whereNull('end_date')
-                    ->orWhere('end_date', '>=', now());
-            });
+        return $query->where('status', PublicationStatus::Published)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now());
     }
 }

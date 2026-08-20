@@ -28,13 +28,6 @@ final class ApparatusObserver
 
     public function updated(Apparatus $apparatus): void
     {
-        if ($apparatus->wasChanged('photo_path')) {
-            $originalPhoto = $apparatus->getOriginal('photo_path');
-            if (is_string($originalPhoto)) {
-                Storage::disk('public')->delete($originalPhoto);
-            }
-        }
-
         $this->activityLogService->log(
             event: 'updated',
             description: "Memperbarui aparatur desa: {$apparatus->name}",
@@ -59,13 +52,23 @@ final class ApparatusObserver
 
     public function forceDeleted(Apparatus $apparatus): void
     {
-        if (is_string($apparatus->photo_path)) {
+        if ($apparatus->photo_path && Storage::disk('public')->exists($apparatus->photo_path)) {
             Storage::disk('public')->delete($apparatus->photo_path);
         }
 
         $this->activityLogService->log(
             event: 'force_deleted',
             description: "Menghapus permanen aparatur desa: {$apparatus->name}",
+            subject: $apparatus,
+            logName: 'apparatus',
+        );
+    }
+
+    public function restored(Apparatus $apparatus): void
+    {
+        $this->activityLogService->log(
+            event: 'restored',
+            description: "Memulihkan aparatur desa: {$apparatus->name}",
             subject: $apparatus,
             logName: 'apparatus',
         );

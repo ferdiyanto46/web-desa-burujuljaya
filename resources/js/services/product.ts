@@ -10,7 +10,7 @@ export const ProductService = {
         router.get(route('admin.products.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.products.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const ProductService = {
         router.get(route('admin.products.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.post(route('admin.products.update', id), {
             _method: 'PUT',
             ...data

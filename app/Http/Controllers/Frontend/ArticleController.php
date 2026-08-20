@@ -20,12 +20,14 @@ final class ArticleController extends Controller
     {
         $query = Article::withDetails()->published()->latestPublished();
 
-        if ($request->has('kategori')) {
-            $query->category($request->string('kategori')->toString());
+        $category = $request->string('kategori')->trim()->toString();
+        if ($category !== '' && $category !== 'all' && $category !== 'semua') {
+            $query->ofCategory($category);
         }
 
-        if ($request->has('cari')) {
-            $query->search($request->string('cari')->toString());
+        $search = $request->string('cari')->trim()->toString();
+        if ($search !== '') {
+            $query->search($search);
         }
 
         $articles = $query->paginate(9)->withQueryString();
@@ -34,7 +36,10 @@ final class ArticleController extends Controller
         return Inertia::render('Public/Articles/Index', [
             'articles' => $articles,
             'categories' => $categories,
-            'filters' => $request->only(['kategori', 'cari']),
+            'filters' => [
+                'kategori' => $category,
+                'cari' => $search,
+            ],
         ]);
     }
 

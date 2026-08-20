@@ -6,7 +6,7 @@ export const VillageService = {
         router.get(route('admin.village-profile.edit'));
     },
     
-    updateProfile(data: any, options?: VisitOptions) {
+    updateProfile<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.village-profile.update'), {
             _method: 'PUT',
             ...data
@@ -22,7 +22,7 @@ export const VillageService = {
         router.get(route('admin.apparatuses.create'));
     },
     
-    storeApparatus(data: any, options?: VisitOptions) {
+    storeApparatus<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.apparatuses.store'), data, options);
     },
     
@@ -30,7 +30,7 @@ export const VillageService = {
         router.get(route('admin.apparatuses.edit', id));
     },
     
-    updateApparatus(id: string, data: any, options?: VisitOptions) {
+    updateApparatus<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.post(route('admin.apparatuses.update', id), {
             _method: 'PUT',
             ...data

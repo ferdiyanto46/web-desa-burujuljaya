@@ -6,7 +6,7 @@ export const SettingService = {
         router.get(route('admin.settings.edit'));
     },
     
-    update(data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.put(route('admin.settings.update'), data, options);
     }
 };

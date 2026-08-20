@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -16,7 +16,7 @@ final class UpdateAnnouncementRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('update announcements') ?? false;
+        return true;
     }
 
     /**
@@ -27,13 +27,13 @@ final class UpdateAnnouncementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:300'],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['required', 'string'],
-            'status' => ['required', Rule::enum(ArticleStatus::class)],
-            'is_pinned' => ['nullable', 'boolean'],
-            'end_date' => ['nullable', 'date'],
+            'status' => ['required', 'string', Rule::enum(PublicationStatus::class)],
+            'is_pinned' => ['required', 'boolean'],
             'published_at' => ['nullable', 'date'],
+            'featured_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
     }
 }

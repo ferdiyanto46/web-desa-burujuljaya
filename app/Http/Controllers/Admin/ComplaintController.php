@@ -6,9 +6,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateComplaintRequest;
+use App\Http\Resources\ComplaintResource;
 use App\Models\Complaint;
+use App\Models\ComplaintCategory;
 use App\Services\ComplaintService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,12 +25,16 @@ final class ComplaintController extends Controller
     /**
      * Display a listing of the complaints.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $complaints = Complaint::withDetails()->latest()->paginate(15);
+        $filters = $request->only(['search', 'category_id', 'status']);
+        $complaints = $this->complaintService->getAdminPaginated($filters);
+        $categories = ComplaintCategory::select('id', 'name')->get();
 
         return Inertia::render('Admin/Complaints/Index', [
-            'complaints' => $complaints,
+            'complaints' => ComplaintResource::collection($complaints),
+            'categories' => $categories,
+            'filters' => $filters,
         ]);
     }
 
@@ -38,7 +46,7 @@ final class ComplaintController extends Controller
         $complaint->load(['category', 'attachments', 'histories.user']);
 
         return Inertia::render('Admin/Complaints/Show', [
-            'complaint' => $complaint,
+            'complaint' => ComplaintResource::make($complaint),
         ]);
     }
 
@@ -49,11 +57,12 @@ final class ComplaintController extends Controller
     {
         $data = $request->validated();
 
+        $userId = Auth::id();
         $this->complaintService->updateStatus(
             $complaint,
             $data['status'],
             $data['notes'] ?? null,
-            auth()->id()
+            $userId !== null ? (int) $userId : null
         );
 
         return redirect()->route('admin.complaints.show', $complaint)->with('success', 'Status pengaduan berhasil diperbarui.');

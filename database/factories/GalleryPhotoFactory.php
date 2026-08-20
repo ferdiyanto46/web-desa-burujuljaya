@@ -1,20 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Database\Factories;
 
-use App\Models\GalleryAlbum;
+use App\Models\Gallery;
 use App\Models\GalleryPhoto;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<GalleryPhoto>
  */
-final class GalleryPhotoFactory extends Factory
+class GalleryPhotoFactory extends Factory
 {
-    protected $model = GalleryPhoto::class;
-
     /**
      * Define the model's default state.
      *
@@ -23,11 +19,18 @@ final class GalleryPhotoFactory extends Factory
     public function definition(): array
     {
         return [
-            'album_id' => GalleryAlbum::factory(),
-            'title' => fake()->sentence(4),
-            'photo_path' => 'gallery/'.fake()->uuid().'.jpg',
-            'size' => fake()->numberBetween(100000, 5000000), // 100KB to 5MB
-            'order' => fake()->numberBetween(0, 100),
+            'gallery_id' => Gallery::factory(),
+            'image_path' => 'galleries/fake-'.fake()->uuid().'.jpg',
+            'caption' => fake()->sentence(),
+            'alt_text' => fake()->words(3, true),
+            'photographer' => fake()->name(),
+            'file_size' => fake()->numberBetween(100000, 5000000),
+            'width' => 1920,
+            'height' => 1080,
+            'mime' => 'image/jpeg',
+            'extension' => 'jpg',
+            'disk' => 'public',
+            'sort_order' => 0,
         ];
     }
 }

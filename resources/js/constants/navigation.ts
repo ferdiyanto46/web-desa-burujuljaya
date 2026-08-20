@@ -1,20 +1,25 @@
+import { route } from '@/lib/route';
+
 export interface NavigationItem {
     name: string;
     label: string;
     icon: string;
     route: string;
     activeRoute?: string; // used for matching active states using wildcards like 'admin.articles.*'
+    roles?: string[]; // Restricted to specific roles (e.g. ['super-admin'])
+    hidden?: boolean; // Set to true to disable/hide from sidebar navigation without deleting
     children?: NavigationItem[];
 }
 
 export interface NavigationGroup {
     label: string;
+    roles?: string[];
     items: NavigationItem[];
 }
 
 export const ADMIN_NAVIGATION: NavigationGroup[] = [
     {
-        label: 'Main',
+        label: 'Utama',
         items: [
             {
                 name: 'dashboard',
@@ -26,11 +31,69 @@ export const ADMIN_NAVIGATION: NavigationGroup[] = [
         ],
     },
     {
+        label: 'Informasi & Desa',
+        items: [
+            {
+                name: 'village-profile',
+                label: 'Profil Desa',
+                icon: 'HomeIcon',
+                route: 'admin.village-profile.edit',
+                activeRoute: 'admin.village-profile.*',
+            },
+            {
+                name: 'village-pages',
+                label: 'Halaman Desa',
+                icon: 'FileTextIcon',
+                route: 'admin.village-pages.index',
+                activeRoute: 'admin.village-pages.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
+            },
+            {
+                name: 'village-services',
+                label: 'Layanan Desa',
+                icon: 'BriefcaseIcon',
+                route: 'admin.village-services.index',
+                activeRoute: 'admin.village-services.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
+            },
+            {
+                name: 'contact-information',
+                label: 'Kontak & Info',
+                icon: 'PhoneIcon',
+                route: 'admin.contact-information.index',
+                activeRoute: 'admin.contact-information.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
+            },
+            {
+                name: 'faqs',
+                label: 'Tanya Jawab (FAQ)',
+                icon: 'HelpCircleIcon',
+                route: 'admin.faqs.index',
+                activeRoute: 'admin.faqs.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
+            },
+            {
+                name: 'homepage-sections',
+                label: 'Tata Letak Beranda',
+                icon: 'LayoutDashboardIcon',
+                route: 'admin.homepage-sections.index',
+                activeRoute: 'admin.homepage-sections.*',
+            },
+            {
+                name: 'page-banners',
+                label: 'Banner Halaman',
+                icon: 'ImageIcon',
+                route: 'admin.settings.index',
+                activeRoute: 'admin.settings.*',
+            },
+        ],
+    },
+    {
         label: 'Konten Publikasi',
         items: [
             {
                 name: 'articles',
-                label: 'Artikel',
+                label: 'Berita & Artikel',
                 icon: 'FileTextIcon',
                 route: 'admin.articles.index',
                 activeRoute: 'admin.articles.*',
@@ -41,13 +104,22 @@ export const ADMIN_NAVIGATION: NavigationGroup[] = [
                 icon: 'MegaphoneIcon',
                 route: 'admin.announcements.index',
                 activeRoute: 'admin.announcements.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
             },
             {
-                name: 'agenda',
-                label: 'Agenda',
+                name: 'agendas',
+                label: 'Agenda Kegiatan',
                 icon: 'CalendarIcon',
-                route: 'admin.agenda.index',
-                activeRoute: 'admin.agenda.*',
+                route: 'admin.agendas.index',
+                activeRoute: 'admin.agendas.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
+            },
+            {
+                name: 'documents',
+                label: 'Dokumen Publik',
+                icon: 'FileIcon',
+                route: 'admin.documents.index',
+                activeRoute: 'admin.documents.*',
             },
         ],
     },
@@ -55,8 +127,8 @@ export const ADMIN_NAVIGATION: NavigationGroup[] = [
         label: 'Galeri & Media',
         items: [
             {
-                name: 'gallery',
-                label: 'Galeri',
+                name: 'galleries',
+                label: 'Galeri Foto',
                 icon: 'ImageIcon',
                 route: 'admin.galleries.index',
                 activeRoute: 'admin.galleries.*',
@@ -67,13 +139,14 @@ export const ADMIN_NAVIGATION: NavigationGroup[] = [
                 icon: 'VideoIcon',
                 route: 'admin.videos.index',
                 activeRoute: 'admin.videos.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
             },
             {
-                name: 'documents',
-                label: 'Dokumen',
-                icon: 'FileIcon',
-                route: 'admin.documents.index',
-                activeRoute: 'admin.documents.*',
+                name: 'apparatus',
+                label: 'Perangkat Desa',
+                icon: 'UsersIcon',
+                route: 'admin.apparatus.index',
+                activeRoute: 'admin.apparatus.*',
             },
         ],
     },
@@ -82,50 +155,84 @@ export const ADMIN_NAVIGATION: NavigationGroup[] = [
         items: [
             {
                 name: 'complaints',
-                label: 'Pengaduan',
+                label: 'Pengaduan Warga',
                 icon: 'MessageSquareWarningIcon',
                 route: 'admin.complaints.index',
                 activeRoute: 'admin.complaints.*',
             },
             {
-                name: 'products',
-                label: 'Produk',
-                icon: 'PackageIcon',
-                route: 'admin.products.index',
-                activeRoute: 'admin.products.*',
-            },
-            {
                 name: 'umkm',
-                label: 'UMKM',
+                label: 'UMKM Desa',
                 icon: 'StoreIcon',
                 route: 'admin.umkm.index',
                 activeRoute: 'admin.umkm.*',
             },
             {
-                name: 'tourism',
-                label: 'Wisata',
+                name: 'tourisms',
+                label: 'Wisata Desa',
                 icon: 'MapIcon',
-                route: 'admin.tourism.index',
-                activeRoute: 'admin.tourism.*',
+                route: 'admin.tourisms.index',
+                activeRoute: 'admin.tourisms.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
+            },
+            {
+                name: 'products',
+                label: 'Produk Desa',
+                icon: 'PackageIcon',
+                route: 'admin.products.index',
+                activeRoute: 'admin.products.*',
+                hidden: true, // Dinonaktifkan sesuai permintaan
             },
         ],
     },
     {
-        label: 'Sistem',
+        label: 'Sistem & Pengaturan',
         items: [
             {
                 name: 'users',
-                label: 'Pengguna',
+                label: 'Manajemen Pengguna',
                 icon: 'UsersIcon',
                 route: 'admin.users.index',
                 activeRoute: 'admin.users.*',
+                roles: ['super-admin'],
             },
             {
                 name: 'settings',
-                label: 'Pengaturan',
+                label: 'Pengaturan Sistem',
                 icon: 'SettingsIcon',
                 route: 'admin.settings.index',
                 activeRoute: 'admin.settings.*',
+                roles: ['super-admin'],
+            },
+            {
+                name: 'activity-logs',
+                label: 'Log Aktivitas',
+                icon: 'HistoryIcon',
+                route: 'admin.activity-logs.index',
+                activeRoute: 'admin.activity-logs.*',
+            },
+            {
+                name: 'audit',
+                label: 'Audit Keamanan',
+                icon: 'ShieldIcon',
+                route: 'admin.audit.index',
+                activeRoute: 'admin.audit.*',
+            },
+            {
+                name: 'backups',
+                label: 'Backup Data',
+                icon: 'DatabaseIcon',
+                route: 'admin.backups.index',
+                activeRoute: 'admin.backups.*',
+                roles: ['super-admin'],
+            },
+            {
+                name: 'cache',
+                label: 'Cache Sistem',
+                icon: 'FolderIcon',
+                route: 'admin.cache.index',
+                activeRoute: 'admin.cache.*',
+                roles: ['super-admin'],
             },
         ],
     },
@@ -133,17 +240,14 @@ export const ADMIN_NAVIGATION: NavigationGroup[] = [
 
 // Helper to find breadcrumb path based on current route name
 export const getBreadcrumbsForRoute = (currentRouteName: string) => {
-    // This is a simplified matching. In a real app with nested navs, this would be recursive.
     const breadcrumbs: { label: string; url?: string }[] = [];
     
-    // Always start with Dashboard as root if not on dashboard
     if (currentRouteName !== 'admin.dashboard') {
         breadcrumbs.push({ label: 'Dashboard', url: route('admin.dashboard') });
     }
 
     for (const group of ADMIN_NAVIGATION) {
         for (const item of group.items) {
-            // Check if current route matches activeRoute pattern (e.g., admin.articles.* matches admin.articles.index)
             if (item.activeRoute) {
                 const pattern = item.activeRoute.replace('*', '.*');
                 const regex = new RegExp(`^${pattern}$`);
@@ -151,7 +255,6 @@ export const getBreadcrumbsForRoute = (currentRouteName: string) => {
                 if (regex.test(currentRouteName)) {
                     breadcrumbs.push({ label: item.label, url: route(item.route) });
                     
-                    // Add sub-page breadcrumbs based on action (create, edit, show)
                     if (currentRouteName.endsWith('.create')) {
                         breadcrumbs.push({ label: 'Tambah Baru' });
                     } else if (currentRouteName.endsWith('.edit')) {
@@ -165,6 +268,6 @@ export const getBreadcrumbsForRoute = (currentRouteName: string) => {
             }
         }
     }
-    
+
     return breadcrumbs;
 };

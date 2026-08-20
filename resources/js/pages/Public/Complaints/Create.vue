@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 
 import Breadcrumb from '@/components/public/Breadcrumb.vue';
@@ -7,13 +8,20 @@ import { Icons } from '@/constants/icons';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { route } from '@/lib/route';
 
-defineProps<{
-    categories: Array<{ id: number; name: string }>;
-}>();
+interface Props {
+    categories?: Array<{ id: number; name: string }> | { data: Array<{ id: number; name: string }> };
+}
+
+const props = defineProps<Props>();
+
+const categoryList = computed(() => {
+    const raw = props.categories;
+    return Array.isArray(raw) ? raw : (raw?.data ?? []);
+});
 
 const form = useForm({
     title: '',
-    description: '',
+    body: '',
     category_id: '',
     is_anonymous: false,
     reporter_name: '',
@@ -29,16 +37,25 @@ const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
 
     if (target.files) {
-        // Append new files up to max 3
         const newFiles = Array.from(target.files);
 
         if (form.attachments.length + newFiles.length > 3) {
-            alert('Maksimal 3 lampiran.');
-
+            alert('Maksimal lampiran adalah 3 file.');
+            target.value = '';
             return;
         }
 
+        // Validate max 10MB per file
+        for (const file of newFiles) {
+            if (file.size > 10 * 1024 * 1024) {
+                alert(`File "${file.name}" melebihi ukuran maksimal 10 MB.`);
+                target.value = '';
+                return;
+            }
+        }
+
         form.attachments = [...form.attachments, ...newFiles];
+        target.value = '';
     }
 };
 
@@ -61,7 +78,7 @@ const submit = () => {
 
     <PublicLayout>
         <template #banner>
-            <PageBanner title="Layanan Pengaduan" subtitle="Sampaikan laporan, kritik, dan saran Anda untuk membangun Desa Burujuljaya yang lebih baik" />
+            <PageBanner pageKey="complaints" title="Layanan Pengaduan" subtitle="Sampaikan laporan, kritik, dan saran Anda untuk membangun Desa Burujuljaya yang lebih baik" />
         </template>
         
         <template #breadcrumb>
@@ -82,7 +99,17 @@ const submit = () => {
 
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <form @submit.prevent="submit" class="p-8 md:p-12 space-y-8">
-                    
+                    <!-- Error Summary Banner -->
+                    <div v-if="Object.keys(form.errors).length > 0" class="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-2xl p-4 flex items-start gap-3">
+                        <component :is="Icons.AlertCircleIcon" class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <h4 class="text-sm font-bold text-red-800 dark:text-red-300">Mohon periksa kembali isian formulir:</h4>
+                            <ul class="mt-1 list-disc list-inside text-xs text-red-700 dark:text-red-400 space-y-0.5">
+                                <li v-for="(err, key) in form.errors" :key="key">{{ err }}</li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <!-- Section: Informasi Pelapor -->
                     <div>
                         <h4 class="text-xl font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-4 mb-6">Informasi Pelapor</h4>
@@ -101,18 +128,18 @@ const submit = () => {
                         
                         <div v-if="!form.is_anonymous" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
-                                <input type="text" v-model="form.reporter_name" :required="!form.is_anonymous" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Masukkan nama Anda">
+                                <label for="reporter_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
+                                <input id="reporter_name" type="text" v-model="form.reporter_name" :required="!form.is_anonymous" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Masukkan nama Anda">
                                 <div v-if="form.errors.reporter_name" class="mt-1 text-sm text-red-600">{{ form.errors.reporter_name }}</div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nomor Telepon/WA <span class="text-red-500">*</span></label>
-                                <input type="text" v-model="form.reporter_phone" :required="!form.is_anonymous" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Contoh: 08123456789">
+                                <label for="reporter_phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nomor Telepon/WA <span class="text-red-500">*</span></label>
+                                <input id="reporter_phone" type="text" v-model="form.reporter_phone" :required="!form.is_anonymous" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Contoh: 08123456789">
                                 <div v-if="form.errors.reporter_phone" class="mt-1 text-sm text-red-600">{{ form.errors.reporter_phone }}</div>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email (Opsional)</label>
-                                <input type="email" v-model="form.reporter_email" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Alamat email untuk notifikasi">
+                                <label for="reporter_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email (Opsional)</label>
+                                <input id="reporter_email" type="email" v-model="form.reporter_email" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Alamat email untuk notifikasi">
                                 <div v-if="form.errors.reporter_email" class="mt-1 text-sm text-red-600">{{ form.errors.reporter_email }}</div>
                             </div>
                         </div>
@@ -127,31 +154,31 @@ const submit = () => {
                         
                         <div class="space-y-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Judul Laporan <span class="text-red-500">*</span></label>
-                                <input type="text" v-model="form.title" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Ringkasan masalah yang dilaporkan">
+                                <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Judul Laporan <span class="text-red-500">*</span></label>
+                                <input id="title" type="text" v-model="form.title" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Ringkasan masalah yang dilaporkan">
                                 <div v-if="form.errors.title" class="mt-1 text-sm text-red-600">{{ form.errors.title }}</div>
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Kategori Masalah <span class="text-red-500">*</span></label>
-                                    <select v-model="form.category_id" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                                    <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Kategori Masalah <span class="text-red-500">*</span></label>
+                                    <select id="category_id" v-model="form.category_id" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                                         <option value="" disabled>Pilih kategori</option>
-                                        <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+                                        <option v-for="cat in categoryList" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                                     </select>
                                     <div v-if="form.errors.category_id" class="mt-1 text-sm text-red-600">{{ form.errors.category_id }}</div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lokasi Kejadian <span class="text-red-500">*</span></label>
-                                    <input type="text" v-model="form.location" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Nama jalan, RT/RW, atau patokan lokasi">
+                                    <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lokasi Kejadian <span class="text-red-500">*</span></label>
+                                    <input id="location" type="text" v-model="form.location" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Nama jalan, RT/RW, atau patokan lokasi">
                                     <div v-if="form.errors.location" class="mt-1 text-sm text-red-600">{{ form.errors.location }}</div>
                                 </div>
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Deskripsi Detail <span class="text-red-500">*</span></label>
-                                <textarea v-model="form.description" required rows="5" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Ceritakan secara detail kronologi atau kondisi yang dilaporkan..."></textarea>
-                                <div v-if="form.errors.description" class="mt-1 text-sm text-red-600">{{ form.errors.description }}</div>
+                                <label for="body" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Deskripsi Detail <span class="text-red-500">*</span></label>
+                                <textarea id="body" v-model="form.body" required rows="5" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Ceritakan secara detail kronologi atau kondisi yang dilaporkan..."></textarea>
+                                <div v-if="form.errors.body" class="mt-1 text-sm text-red-600">{{ form.errors.body }}</div>
                             </div>
                             
                             <div>
@@ -163,11 +190,11 @@ const submit = () => {
                                         <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
                                             <label for="file-upload" class="relative cursor-pointer bg-transparent rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
                                                 <span>Pilih file</span>
-                                                <input id="file-upload" type="file" class="sr-only" multiple accept="image/*" @change="handleFileChange" :disabled="form.attachments.length >= 3">
+                                                <input id="file-upload" type="file" class="sr-only" multiple accept="image/jpeg,image/png,image/jpg,application/pdf,.doc,.docx" @change="handleFileChange" :disabled="form.attachments.length >= 3">
                                             </label>
                                             <p class="pl-1">atau tarik dan lepas di sini</p>
                                         </div>
-                                        <p class="text-xs text-gray-500 dark:text-gray-500">PNG, JPG, GIF up to 2MB</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-500">PNG, JPG, PDF, DOC hingga 10MB per file (maks. 3 file)</p>
                                     </div>
                                 </div>
                                 

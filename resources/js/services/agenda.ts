@@ -10,7 +10,7 @@ export const AgendaService = {
         router.get(route('admin.agendas.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.agendas.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const AgendaService = {
         router.get(route('admin.agendas.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.put(route('admin.agendas.update', id), data, options);
     },
     

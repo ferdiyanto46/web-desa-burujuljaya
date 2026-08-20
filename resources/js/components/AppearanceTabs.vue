@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { Monitor, Moon, Sun } from '@lucide/vue';
+import type { Component } from 'vue';
 import { useLayoutStore  } from '@/stores/layoutStore';
 import type {Theme} from '@/stores/layoutStore';
 
+
 const layoutStore = useLayoutStore();
 
-const tabs: { value: Theme, Icon: any, label: string }[] = [
+const tabs: { value: Theme, Icon: Component, label: string }[] = [
     { value: 'light', Icon: Sun, label: 'Light' },
     { value: 'dark', Icon: Moon, label: 'Dark' },
     { value: 'system', Icon: Monitor, label: 'System' },

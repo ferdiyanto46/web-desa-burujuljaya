@@ -1,18 +1,48 @@
 <script setup lang="ts">
-defineProps<{
-    title: string;
+import { usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+const props = defineProps<{
+    title?: string;
     subtitle?: string;
     backgroundImage?: string;
+    pageKey?: string; // e.g. 'profile', 'articles', 'gallery', 'umkm', 'documents', 'complaints', 'tourism', 'services', 'faq', 'contact'
 }>();
+
+const page = usePage();
+
+const bannerConfig = computed(() => {
+    if (!props.pageKey) return null;
+    const allBanners = (page.props as any).page_banners || {};
+    return allBanners[props.pageKey] || null;
+});
+
+const resolvedTitle = computed(() => {
+    return props.title || bannerConfig.value?.title || 'Informasi Desa';
+});
+
+const resolvedSubtitle = computed(() => {
+    if (props.subtitle !== undefined) return props.subtitle;
+    return bannerConfig.value?.subtitle || '';
+});
+
+const resolvedImage = computed(() => {
+    if (props.backgroundImage) return props.backgroundImage;
+    const customImage = bannerConfig.value?.image_url || bannerConfig.value?.image_path;
+    if (customImage) {
+        return customImage.startsWith('http') ? customImage : (customImage.startsWith('/') ? customImage : `/storage/${customImage}`);
+    }
+    return null;
+});
 </script>
 
 <template>
-    <div class="relative bg-blue-900 overflow-hidden" :class="{'py-16 sm:py-24': !backgroundImage, 'py-24 sm:py-32': backgroundImage}">
+    <div class="relative bg-blue-900 dark:bg-slate-950 overflow-hidden transition-colors duration-300" :class="{'py-16 sm:py-24': !resolvedImage, 'py-24 sm:py-32': resolvedImage}">
         <!-- Background Image with Overlay -->
-        <div v-if="backgroundImage" class="absolute inset-0">
-            <img :src="backgroundImage" :alt="title" class="w-full h-full object-cover" />
-            <div class="absolute inset-0 bg-blue-900/80 mix-blend-multiply" aria-hidden="true"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/40 opacity-80" aria-hidden="true"></div>
+        <div v-if="resolvedImage" class="absolute inset-0">
+            <img :src="resolvedImage" :alt="resolvedTitle" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-blue-950/75 dark:bg-slate-950/80 mix-blend-multiply" aria-hidden="true"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-blue-950 via-blue-950/50 to-transparent dark:from-slate-950 opacity-90" aria-hidden="true"></div>
         </div>
         
         <!-- Default Pattern if no image -->
@@ -25,12 +55,12 @@ defineProps<{
             </svg>
         </div>
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-            <h1 class="text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">{{ title }}</h1>
-            <p v-if="subtitle" class="mt-4 sm:mt-6 max-w-2xl text-lg sm:text-xl text-blue-100">
-                {{ subtitle }}
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+            <h1 class="text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">{{ resolvedTitle }}</h1>
+            <p v-if="resolvedSubtitle" class="mt-4 sm:mt-6 max-w-2xl text-lg sm:text-xl text-blue-100 dark:text-gray-200">
+                {{ resolvedSubtitle }}
             </p>
-            <div class="mt-8">
+            <div v-if="$slots.action" class="mt-8">
                 <slot name="action" />
             </div>
         </div>

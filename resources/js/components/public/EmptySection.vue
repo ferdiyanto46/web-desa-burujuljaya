@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { Component } from 'vue';
 import { Icons } from '@/constants/icons';
 
 defineProps<{
     title: string;
     message?: string;
-    icon?: any;
+    icon?: Component;
 }>();
 </script>
 

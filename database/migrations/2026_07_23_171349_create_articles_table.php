@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -38,8 +39,8 @@ return new class extends Migration
             $table->index(['status', 'published_at', 'id', 'deleted_at'], 'articles_public_pagination_idx');
             $table->index(['category_id', 'status', 'deleted_at'], 'articles_category_status_idx');
             $table->index(['is_featured', 'status', 'deleted_at'], 'articles_featured_status_idx');
-            
-            if (\Illuminate\Support\Facades\DB::getDriverName() !== 'sqlite') {
+
+            if (DB::getDriverName() !== 'sqlite') {
                 $table->fullText(['title', 'excerpt', 'content'], 'articles_fulltext_idx');
             }
         });

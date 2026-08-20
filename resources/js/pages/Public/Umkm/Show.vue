@@ -80,6 +80,10 @@ defineProps<{
                                 <div>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Alamat</p>
                                     <p class="font-bold text-gray-900 dark:text-white">{{ umkm.address }}</p>
+                                    <a v-if="umkm.google_maps_url" :href="umkm.google_maps_url" target="_blank" class="inline-flex items-center mt-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+                                        <component :is="Icons.MapIcon" class="w-4 h-4 mr-1" />
+                                        Lihat Lokasi
+                                    </a>
                                 </div>
                             </div>
                             

@@ -32,6 +32,12 @@ final class ArticleService
                 $data['featured_image_path'] = $this->mediaService->store($coverImage, 'articles');
             }
 
+            if (($data['status'] ?? 'draft') === 'published' && empty($data['published_at'])) {
+                $data['published_at'] = now();
+            } elseif (($data['status'] ?? 'draft') === 'draft') {
+                $data['published_at'] = null;
+            }
+
             $article->fill($data);
             $article->save();
 
@@ -53,10 +59,19 @@ final class ArticleService
 
             if ($coverImage) {
                 $data['featured_image_path'] = $this->mediaService->replace(
-                    $coverImage, 
-                    $article->featured_image_path, 
+                    $coverImage,
+                    $article->featured_image_path,
                     'articles'
                 );
+            }
+
+            $newStatus = $data['status'] ?? $article->status->value;
+            if ($newStatus === 'published') {
+                if (empty($data['published_at'])) {
+                    $data['published_at'] = $article->published_at ?? now();
+                }
+            } elseif ($newStatus === 'draft') {
+                $data['published_at'] = null;
             }
 
             $article->fill($data);
@@ -90,7 +105,7 @@ final class ArticleService
         if ($article->featured_image_path) {
             $this->mediaService->delete($article->featured_image_path);
         }
-        
+
         $article->forceDelete();
     }
 }

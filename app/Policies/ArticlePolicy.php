@@ -12,7 +12,7 @@ class ArticlePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view any articles');
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('articles.viewAny') || $user->can('view any articles');
     }
 
     /**
@@ -20,7 +20,7 @@ class ArticlePolicy
      */
     public function view(User $user, Article $article): bool
     {
-        return $user->can('view articles');
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('articles.view') || $user->can('view articles');
     }
 
     /**
@@ -28,7 +28,7 @@ class ArticlePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create articles');
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('articles.create') || $user->can('create articles');
     }
 
     /**
@@ -36,7 +36,7 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article): bool
     {
-        return $user->can('update articles');
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('articles.update') || $user->can('update articles');
     }
 
     /**
@@ -44,7 +44,7 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article): bool
     {
-        return $user->can('delete articles');
+        return $user->hasRole(['admin-desa', 'editor-berita']) || $user->can('articles.delete') || $user->can('delete articles');
     }
 
     /**
@@ -52,7 +52,7 @@ class ArticlePolicy
      */
     public function restore(User $user, Article $article): bool
     {
-        return $user->can('restore articles');
+        return $user->hasRole(['admin-desa', 'editor-berita']) || $user->can('articles.restore') || $user->can('restore articles');
     }
 
     /**
@@ -60,6 +60,6 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article): bool
     {
-        return $user->can('force delete articles');
+        return $user->hasRole('admin-desa') || $user->can('articles.forceDelete') || $user->can('force delete articles');
     }
 }

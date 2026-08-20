@@ -3,18 +3,12 @@ import { CollapsibleRoot, CollapsibleTrigger, CollapsibleContent } from 'reka-ui
 import { computed, ref, watch } from 'vue';
 import { Icons  } from '@/constants/icons';
 import type {IconName} from '@/constants/icons';
+import type { NavigationItem } from '@/constants/navigation';
 import { route } from '@/lib/route';
 import SidebarItem from './SidebarItem.vue';
 
 interface Props {
-    item: {
-        name: string;
-        label: string;
-        icon: string;
-        route: string;
-        activeRoute?: string;
-        children?: any[];
-    };
+    item: NavigationItem;
     collapsed?: boolean;
 }
 

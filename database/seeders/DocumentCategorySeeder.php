@@ -25,11 +25,10 @@ final class DocumentCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            DocumentCategory::create([
-                'name' => $category,
-                'slug' => Str::slug($category),
-                'is_active' => true,
-            ]);
+            DocumentCategory::firstOrCreate(
+                ['slug' => Str::slug($category)],
+                ['name' => $category, 'is_active' => true]
+            );
         }
     }
 }

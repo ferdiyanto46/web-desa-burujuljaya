@@ -13,11 +13,11 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     accept: 'image/*',
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 10 * 1024 * 1024, // 10MB
     disabled: false,
     multiple: false,
     label: 'Klik atau seret file ke area ini untuk mengunggah',
-    helperText: 'Mendukung PNG, JPG atau GIF (Maks. 5MB)',
+    helperText: 'Mendukung JPG, PNG, WEBP, SVG (Maks. 10MB)',
 });
 
 const emit = defineEmits<{

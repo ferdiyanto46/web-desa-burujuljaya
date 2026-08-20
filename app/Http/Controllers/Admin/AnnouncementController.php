@@ -7,9 +7,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreAnnouncementRequest;
 use App\Http\Requests\Admin\UpdateAnnouncementRequest;
+use App\Http\Resources\Admin\AnnouncementResource;
 use App\Models\Announcement;
 use App\Services\AnnouncementService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,12 +25,34 @@ final class AnnouncementController extends Controller
     /**
      * Display a listing of the announcements.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $announcements = Announcement::withDetails()->latest()->paginate(15);
+        Gate::authorize('viewAny', Announcement::class);
+
+        $query = Announcement::withDetails()->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->string('search')->toString();
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('excerpt', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status')->toString());
+        }
+
+        if ($request->filled('is_pinned')) {
+            $query->where('is_pinned', $request->boolean('is_pinned'));
+        }
+
+        $announcements = $query->paginate(10)->withQueryString();
 
         return Inertia::render('Admin/Announcements/Index', [
-            'announcements' => $announcements,
+            'announcements' => AnnouncementResource::collection($announcements),
+            'filters' => $request->only(['search', 'status', 'is_pinned']),
         ]);
     }
 
@@ -36,6 +61,8 @@ final class AnnouncementController extends Controller
      */
     public function create(): Response
     {
+        Gate::authorize('create', Announcement::class);
+
         return Inertia::render('Admin/Announcements/Create');
     }
 
@@ -44,9 +71,13 @@ final class AnnouncementController extends Controller
      */
     public function store(StoreAnnouncementRequest $request): RedirectResponse
     {
+        Gate::authorize('create', Announcement::class);
+
         $data = $request->validated();
 
-        $this->announcementService->broadcast($data);
+        $data['user_id'] = $request->user()->id;
+
+        $this->announcementService->broadcast($data, $request->file('featured_image'));
 
         return redirect()->route('admin.announcements.index')->with('success', 'Pengumuman berhasil ditambahkan.');
     }
@@ -56,8 +87,10 @@ final class AnnouncementController extends Controller
      */
     public function edit(Announcement $announcement): Response
     {
+        Gate::authorize('update', $announcement);
+
         return Inertia::render('Admin/Announcements/Edit', [
-            'announcement' => $announcement,
+            'announcement' => new AnnouncementResource($announcement),
         ]);
     }
 
@@ -66,9 +99,11 @@ final class AnnouncementController extends Controller
      */
     public function update(UpdateAnnouncementRequest $request, Announcement $announcement): RedirectResponse
     {
+        Gate::authorize('update', $announcement);
+
         $data = $request->validated();
 
-        $this->announcementService->update($announcement, $data);
+        $this->announcementService->update($announcement, $data, $request->file('featured_image'));
 
         return redirect()->route('admin.announcements.index')->with('success', 'Pengumuman berhasil diperbarui.');
     }
@@ -78,6 +113,8 @@ final class AnnouncementController extends Controller
      */
     public function destroy(Announcement $announcement): RedirectResponse
     {
+        Gate::authorize('delete', $announcement);
+
         $this->announcementService->revoke($announcement);
 
         return redirect()->route('admin.announcements.index')->with('success', 'Pengumuman berhasil dihapus.');

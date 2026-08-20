@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\PublicationStatus;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Umkm;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @extends Factory<Product>
  */
-final class ProductFactory extends Factory
+class ProductFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -22,16 +25,30 @@ final class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        $title = fake()->unique()->words(3, true);
+
         return [
+            'ulid' => (string) Ulid::generate(),
             'user_id' => User::factory(),
             'category_id' => ProductCategory::factory(),
-            'umkm_id' => fake()->boolean(70) ? Umkm::factory() : null,
-            'name' => fake()->words(3, true),
-            'description' => fake()->paragraphs(2, true),
-            'price' => fake()->numberBetween(10, 500) * 1000,
-            'unit' => fake()->randomElement(['Pcs', 'Kg', 'Pack', 'Gram']),
-            'cover_image' => null,
-            'is_active' => fake()->boolean(90),
+            'umkm_id' => Umkm::factory(),
+            'title' => str($title)->title()->toString(),
+            'slug' => Str::slug($title),
+            'excerpt' => fake()->sentence(),
+            'description' => fake()->paragraphs(3, true),
+            'featured_image_path' => null,
+            'sku' => fake()->unique()->numerify('SKU-####'),
+            'price' => fake()->numberBetween(10000, 500000),
+            'stock' => fake()->numberBetween(0, 100),
+            'unit' => fake()->randomElement(['pcs', 'kg', 'box']),
+            'weight' => fake()->randomFloat(2, 0.1, 5.0),
+            'is_featured' => fake()->boolean(20),
+            'is_pinned' => fake()->boolean(10),
+            'status' => PublicationStatus::Published,
+            'published_at' => now(),
+            'view_count' => fake()->numberBetween(0, 1000),
+            'meta_title' => str($title)->title()->toString(),
+            'meta_description' => fake()->sentence(),
         ];
     }
 }

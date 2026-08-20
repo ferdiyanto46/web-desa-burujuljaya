@@ -8,6 +8,7 @@ use App\Models\VillageProfile;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 final class VillageProfileService
 {
@@ -23,9 +24,22 @@ final class VillageProfileService
      */
     public function getActive(): ?VillageProfile
     {
-        return $this->cache->rememberForever(self::CACHE_KEY, function () {
-            return VillageProfile::with('missions')->first();
-        });
+        $cached = $this->cache->get(self::CACHE_KEY);
+
+        if ($cached instanceof VillageProfile) {
+            return $cached;
+        }
+
+        // Invalidate invalid/corrupted cache and fetch freshly from database
+        $this->flushCache();
+
+        $profile = VillageProfile::with('missions')->first();
+
+        if ($profile instanceof VillageProfile) {
+            $this->cache->forever(self::CACHE_KEY, $profile);
+        }
+
+        return $profile;
     }
 
     /**
@@ -38,11 +52,39 @@ final class VillageProfileService
         return $this->db->transaction(function () use ($data, $logo) {
             $profile = VillageProfile::firstOrCreate([]);
 
-            if ($logo) {
-                // Storage cleanup of the old logo will be handled by the Observer
+            unset($data['logo']);
+
+            if ($logo instanceof UploadedFile && $logo->isValid()) {
+                $oldLogo = $profile->logo_path;
+
                 $path = $logo->store('village', 'public');
                 if (is_string($path)) {
                     $data['logo_path'] = $path;
+
+                    if (is_string($oldLogo) && $oldLogo !== $path && Storage::disk('public')->exists($oldLogo)) {
+                        Storage::disk('public')->delete($oldLogo);
+                    }
+                }
+            }
+
+            if (array_key_exists('missions', $data)) {
+                $missions = $data['missions'];
+                unset($data['missions']);
+
+                if (is_array($missions)) {
+                    $profile->missions()->delete();
+                    $order = 10;
+                    foreach ($missions as $item) {
+                        $content = is_array($item) ? ($item['content'] ?? $item['statement'] ?? '') : (is_string($item) ? $item : '');
+                        $content = trim((string) $content);
+                        if ($content !== '') {
+                            $profile->missions()->create([
+                                'content' => $content,
+                                'sort_order' => is_array($item) && isset($item['sort_order']) ? (int) $item['sort_order'] : $order,
+                            ]);
+                            $order += 10;
+                        }
+                    }
                 }
             }
 
@@ -50,7 +92,7 @@ final class VillageProfileService
 
             $this->flushCache();
 
-            return $profile;
+            return $profile->load('missions');
         });
     }
 

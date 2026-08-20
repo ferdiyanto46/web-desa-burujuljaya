@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +21,9 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Passkeys\Passkey;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -41,8 +47,53 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read Collection<int, Passkey> $passkeys
+ * @property-read int|null $passkeys_count
+ * @property-read Collection<int, Permission> $permissions
+ * @property-read int|null $permissions_count
+ * @property-read Collection<int, Role> $roles
+ * @property-read int|null $roles_count
+ * @property-read Collection<int, Permission> $teams
+ * @property-read int|null $teams_count
+ *
+ * @method static Builder<static>|User active()
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static Builder<static>|User newModelQuery()
+ * @method static Builder<static>|User newQuery()
+ * @method static Builder<static>|User onlyTrashed()
+ * @method static Builder<static>|User permission($permissions, bool $without = false)
+ * @method static Builder<static>|User query()
+ * @method static Builder<static>|User role($roles, ?string $guard = null, bool $without = false)
+ * @method static Builder<static>|User team($teams, bool $without = false)
+ * @method static Builder<static>|User whereAvatar($value)
+ * @method static Builder<static>|User whereCreatedAt($value)
+ * @method static Builder<static>|User whereDeletedAt($value)
+ * @method static Builder<static>|User whereEmail($value)
+ * @method static Builder<static>|User whereEmailVerifiedAt($value)
+ * @method static Builder<static>|User whereId($value)
+ * @method static Builder<static>|User whereIsActive($value)
+ * @method static Builder<static>|User whereLockedUntil($value)
+ * @method static Builder<static>|User whereLoginAttempts($value)
+ * @method static Builder<static>|User whereName($value)
+ * @method static Builder<static>|User wherePassword($value)
+ * @method static Builder<static>|User wherePhone($value)
+ * @method static Builder<static>|User whereRememberToken($value)
+ * @method static Builder<static>|User whereTwoFactorConfirmedAt($value)
+ * @method static Builder<static>|User whereTwoFactorRecoveryCodes($value)
+ * @method static Builder<static>|User whereTwoFactorSecret($value)
+ * @method static Builder<static>|User whereUlid($value)
+ * @method static Builder<static>|User whereUpdatedAt($value)
+ * @method static Builder<static>|User withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|User withoutPermission($permissions)
+ * @method static Builder<static>|User withoutRole($roles, ?string $guard = null)
+ * @method static Builder<static>|User withoutTeam($teams)
+ * @method static Builder<static>|User withoutTrashed()
+ *
+ * @mixin \Eloquent
  */
-#[Fillable(['name', 'email', 'password', 'avatar', 'phone'])]
+#[Fillable(['name', 'email', 'password', 'avatar', 'phone', 'is_active'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 #[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements PasskeyUser
@@ -62,11 +113,9 @@ class User extends Authenticatable implements PasskeyUser
      * Automatically generates a ULID on creation if one is not already set.
      * ULIDs are monotonically sortable and safe for public-facing URLs.
      */
-    protected static function boot(): void
+    protected static function booted(): void
     {
-        parent::boot();
-
-        static::creating(static function (self $user): void {
+        static::creating(static function (User $user): void {
             if (empty($user->ulid)) {
                 $user->ulid = (string) Str::ulid();
             }

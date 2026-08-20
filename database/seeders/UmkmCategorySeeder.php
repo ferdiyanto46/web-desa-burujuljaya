@@ -24,10 +24,10 @@ final class UmkmCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            UmkmCategory::create([
-                'name' => $category,
-                'slug' => Str::slug($category),
-            ]);
+            UmkmCategory::firstOrCreate(
+                ['slug' => Str::slug($category)],
+                ['name' => $category]
+            );
         }
     }
 }

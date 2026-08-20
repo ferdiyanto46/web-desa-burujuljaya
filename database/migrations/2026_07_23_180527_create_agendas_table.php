@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->dateTime('start_datetime');
             $table->dateTime('end_datetime')->nullable();
 
-            $table->string('status')->default(ArticleStatus::Draft->value);
+            $table->string('status')->default(PublicationStatus::Draft->value);
             $table->dateTime('published_at')->nullable();
 
             $table->timestamps();

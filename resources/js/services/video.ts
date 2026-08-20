@@ -10,7 +10,7 @@ export const VideoService = {
         router.get(route('admin.videos.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.videos.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const VideoService = {
         router.get(route('admin.videos.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.put(route('admin.videos.update', id), data, options);
     },
     

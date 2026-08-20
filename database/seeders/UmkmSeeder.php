@@ -33,6 +33,10 @@ final class UmkmSeeder extends Seeder
             return;
         }
 
-        Umkm::factory(20)->recycle($users)->recycle($categories)->create();
+        Umkm::factory(20)
+            ->recycle($users)
+            ->recycle($categories)
+            ->hasPhotos(3)
+            ->create();
     }
 }

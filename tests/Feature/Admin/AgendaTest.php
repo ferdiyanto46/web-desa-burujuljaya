@@ -1,16 +1,17 @@
 <?php
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Models\Agenda;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
     // Setup Super Admin role and permissions
-    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+    app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
     Permission::firstOrCreate(['name' => 'view any agendas']);
     Permission::firstOrCreate(['name' => 'view agendas']);
@@ -42,8 +43,8 @@ it('can render agenda index page for authorized users', function () {
 });
 
 it('can filter and search agendas', function () {
-    Agenda::factory()->create(['title' => 'Village Meeting', 'location' => 'Hall', 'status' => ArticleStatus::Published]);
-    Agenda::factory()->create(['title' => 'Sport Event', 'location' => 'Field', 'status' => ArticleStatus::Draft]);
+    Agenda::factory()->create(['title' => 'Village Meeting', 'location' => 'Hall', 'status' => PublicationStatus::Published]);
+    Agenda::factory()->create(['title' => 'Sport Event', 'location' => 'Field', 'status' => PublicationStatus::Draft]);
 
     // Search
     $this->actingAs($this->admin)
@@ -130,7 +131,7 @@ it('can update an existing agenda and replace the image', function () {
     ]);
 
     $agenda->refresh();
-    
+
     // Old image should be deleted
     Storage::disk('public')->assertMissing('agendas/old.jpg');
     // New image should exist

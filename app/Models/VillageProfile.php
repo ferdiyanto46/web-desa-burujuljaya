@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Observers\VillageProfileObserver;
+use App\Services\VillageProfileService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Collection;
@@ -51,6 +52,33 @@ use Illuminate\Support\Facades\Storage;
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property-read Collection<int, VillageMission> $missions
+ * @property-read int|null $missions_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereAreaHectares($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereDistrict($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereEstablishedYear($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereHistory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereLogoPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile wherePostalCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereProvince($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereRegency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereVillageCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereVillageName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereVision($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VillageProfile whereWebsiteUrl($value)
+ *
+ * @mixin \Eloquent
  */
 #[ObservedBy(VillageProfileObserver::class)]
 final class VillageProfile extends Model
@@ -134,9 +162,19 @@ final class VillageProfile extends Model
      */
     public function logoUrl(): ?string
     {
-        return $this->logo_path
-            ? Storage::disk('public')->url($this->logo_path)
-            : null;
+        if (! $this->logo_path) {
+            return null;
+        }
+
+        if (config('filesystems.disks.public.driver') === 'local') {
+            if (! Storage::disk('public')->exists($this->logo_path)) {
+                return null;
+            }
+
+            return '/storage/'.ltrim($this->logo_path, '/');
+        }
+
+        return Storage::disk('public')->url($this->logo_path);
     }
 
     /**
@@ -162,5 +200,13 @@ final class VillageProfile extends Model
     public function hasCoordinates(): bool
     {
         return $this->latitude !== null && $this->longitude !== null;
+    }
+
+    /**
+     * Get the active village profile singleton instance.
+     */
+    public static function getActive(): ?self
+    {
+        return app(VillageProfileService::class)->getActive();
     }
 }

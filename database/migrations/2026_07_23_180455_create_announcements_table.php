@@ -1,8 +1,9 @@
 <?php
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -22,9 +23,9 @@ return new class extends Migration
             $table->string('excerpt', 500)->nullable();
             $table->longText('content');
 
-            $table->string('status')->default(ArticleStatus::Draft->value);
+            $table->string('status')->default(PublicationStatus::Draft->value);
             $table->boolean('is_pinned')->default(false);
-            $table->dateTime('end_date')->nullable();
+            $table->string('featured_image_path')->nullable();
             $table->dateTime('published_at')->nullable();
 
             $table->timestamps();
@@ -32,8 +33,8 @@ return new class extends Migration
 
             // Index yang dioptimalkan sesuai M-01
             $table->index(['is_pinned', 'status', 'deleted_at'], 'announcements_pinned_status_idx');
-            
-            if (\Illuminate\Support\Facades\DB::getDriverName() !== 'sqlite') {
+
+            if (DB::getDriverName() !== 'sqlite') {
                 $table->fullText(['title', 'excerpt', 'content'], 'announcements_fulltext_idx');
             }
         });

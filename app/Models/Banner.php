@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Observers\BannerObserver;
 use App\Traits\HasUlid;
+use Database\Factories\BannerFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,13 +15,15 @@ use Illuminate\Database\Eloquent\Model;
 #[ObservedBy(BannerObserver::class)]
 final class Banner extends Model
 {
+    /** @use HasFactory<BannerFactory> */
     use HasFactory;
+
     use HasUlid;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'title',
@@ -46,6 +49,7 @@ final class Banner extends Model
     /**
      * Scope a query to only include active banners.
      */
+    /** @param Builder<static> $query */
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true);
@@ -54,6 +58,7 @@ final class Banner extends Model
     /**
      * Scope a query to order banners by sort_order.
      */
+    /** @param Builder<static> $query */
     public function scopeOrdered(Builder $query): void
     {
         $query->orderBy('sort_order', 'asc');

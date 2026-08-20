@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\SubmitComplaintRequest;
+use App\Http\Resources\ComplaintCategoryResource;
+use App\Http\Resources\ComplaintResource;
 use App\Models\Complaint;
 use App\Models\ComplaintCategory;
 use App\Services\ComplaintService;
@@ -29,7 +31,7 @@ final class ComplaintController extends Controller
         $categories = ComplaintCategory::all();
 
         return Inertia::render('Public/Complaints/Create', [
-            'categories' => $categories,
+            'categories' => ComplaintCategoryResource::collection($categories),
         ]);
     }
 
@@ -65,7 +67,7 @@ final class ComplaintController extends Controller
 
         return Inertia::render('Public/Complaints/Track', [
             'tiket' => $tiket,
-            'complaint' => $complaint,
+            'complaint' => $complaint ? ComplaintResource::make($complaint) : null,
         ]);
     }
 }

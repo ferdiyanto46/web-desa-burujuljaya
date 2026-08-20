@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\User;
@@ -31,7 +31,7 @@ class ArticleFactory extends Factory
             'excerpt' => fake()->paragraph(),
             'content' => collect(fake()->paragraphs(5))->map(fn ($p) => "<p>$p</p>")->implode(''),
             'featured_image_path' => null,
-            'status' => ArticleStatus::Draft,
+            'status' => PublicationStatus::Draft,
             'is_featured' => false,
             'views' => 0,
             'published_at' => null,
@@ -47,7 +47,7 @@ class ArticleFactory extends Factory
     public function published(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Published,
+            'status' => PublicationStatus::Published,
             'published_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'views' => fake()->numberBetween(10, 1000),
         ]);
@@ -59,7 +59,7 @@ class ArticleFactory extends Factory
     public function scheduled(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Scheduled,
+            'status' => PublicationStatus::Scheduled,
             'published_at' => fake()->dateTimeBetween('now', '+1 month'),
         ]);
     }
@@ -70,7 +70,7 @@ class ArticleFactory extends Factory
     public function draft(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Draft,
+            'status' => PublicationStatus::Draft,
             'published_at' => null,
         ]);
     }

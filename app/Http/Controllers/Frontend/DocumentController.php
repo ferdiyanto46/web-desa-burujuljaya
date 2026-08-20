@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DocumentResource;
 use App\Models\Document;
 use App\Models\DocumentCategory;
 use App\Services\DocumentService;
@@ -14,36 +15,31 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-final class DocumentController extends Controller
+class DocumentController extends Controller
 {
     public function __construct(
         private readonly DocumentService $documentService
     ) {}
 
     /**
-     * Display a listing of public documents.
+     * Display a listing of the resource.
      */
     public function index(Request $request): Response
     {
-        $query = Document::withDetails()->public()->latest();
+        $filters = $request->only(['cari', 'kategori', 'search', 'category_id']);
 
-        if ($request->has('kategori')) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('slug', $request->string('kategori')->toString());
-            });
-        }
+        $documents = $this->documentService->getPublicPaginated($filters);
+        $categories = DocumentCategory::select('id', 'name', 'slug')->get();
 
-        if ($request->has('cari')) {
-            $query->where('title', 'like', '%'.$request->string('cari')->toString().'%');
-        }
-
-        $documents = $query->paginate(15)->withQueryString();
-        $categories = DocumentCategory::all();
+        $frontendFilters = [
+            'cari' => (string) ($request->input('cari') ?? $request->input('search') ?? ''),
+            'kategori' => (string) ($request->input('kategori') ?? $request->input('category_id') ?? ''),
+        ];
 
         return Inertia::render('Public/Documents/Index', [
-            'documents' => $documents,
+            'documents' => DocumentResource::collection($documents),
             'categories' => $categories,
-            'filters' => $request->only(['kategori', 'cari']),
+            'filters' => $frontendFilters,
         ]);
     }
 
@@ -52,13 +48,13 @@ final class DocumentController extends Controller
      */
     public function download(string $ulid): StreamedResponse
     {
-        $document = Document::public()->where('ulid', $ulid)->firstOrFail();
+        $document = Document::where('ulid', $ulid)->published()->firstOrFail();
 
-        $this->documentService->incrementDownload($document);
+        $this->documentService->incrementDownloadCounter($document);
 
-        return Storage::disk('public')->download(
+        return Storage::disk($document->disk)->download(
             $document->file_path,
-            $document->title.'.'.$document->file_extension
+            $document->file_name
         );
     }
 }

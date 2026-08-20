@@ -13,8 +13,8 @@ import { route } from '@/lib/route';
 
 const props = defineProps<{
     articles: {
-        data: Array<any>;
-        links: Array<any>;
+        data: any[];
+        links: any[];
         current_page: number;
         last_page: number;
         total: number;
@@ -44,9 +44,17 @@ const handleCategoryChange = (value: string) => {
 };
 
 const submit = debounce(() => {
+    const params: Record<string, string> = {};
+    if (form.value.cari && form.value.cari.trim() !== '') {
+        params.cari = form.value.cari.trim();
+    }
+    if (form.value.kategori && form.value.kategori.trim() !== '' && form.value.kategori !== 'all' && form.value.kategori !== 'semua') {
+        params.kategori = form.value.kategori.trim();
+    }
+
     router.get(
         route('articles.index'),
-        { cari: form.value.cari, kategori: form.value.kategori },
+        params,
         { preserveState: true, preserveScroll: true, replace: true }
     );
 }, 300);
@@ -56,6 +64,18 @@ const formatDate = (dateString: string) => {
         day: 'numeric', month: 'long', year: 'numeric'
     }).format(new Date(dateString));
 };
+
+const getArticleImage = (item: any): string | null => {
+    if (!item) return null;
+    if (item.cover_image_url) return item.cover_image_url;
+    if (item.featured_image_url) return item.featured_image_url;
+    if (item.featured_image_path) {
+        return item.featured_image_path.startsWith('http')
+            ? item.featured_image_path
+            : `/storage/${item.featured_image_path.replace(/^\//, '')}`;
+    }
+    return null;
+};
 </script>
 
 <template>
@@ -63,7 +83,7 @@ const formatDate = (dateString: string) => {
 
     <PublicLayout>
         <template #banner>
-            <PageBanner title="Kabar Desa" subtitle="Informasi, berita, dan artikel terbaru seputar kegiatan di Desa Burujuljaya" />
+            <PageBanner pageKey="articles" title="Kabar Desa" subtitle="Informasi, berita, dan artikel terbaru seputar kegiatan di Desa Burujuljaya" />
         </template>
         
         <template #breadcrumb>
@@ -92,7 +112,7 @@ const formatDate = (dateString: string) => {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                     <div v-for="article in articles.data" :key="article.id" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col hover:shadow-md transition-shadow group">
                         <div class="h-56 relative overflow-hidden bg-gray-200 dark:bg-gray-700">
-                            <img v-if="article.cover_image_url" :src="article.cover_image_url" :alt="article.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <img v-if="getArticleImage(article)" :src="getArticleImage(article)!" :alt="article.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                             <div v-else class="absolute inset-0 flex items-center justify-center"><component :is="Icons.ImageIcon" class="w-12 h-12 text-gray-400" /></div>
                         </div>
                         <div class="p-6 flex flex-col flex-grow">

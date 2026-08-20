@@ -4,35 +4,46 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\PublicationStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-final class UpdateUmkmRequest extends FormRequest
+class UpdateUmkmRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return $this->user()?->can('update umkm') ?? false;
+        return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
+            'title' => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'exists:umkm_categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'owner_name' => ['required', 'string', 'max:255'],
+            'user_id' => ['nullable', 'exists:users,id'],
+            'owner_name' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'phone' => ['nullable', 'string', 'max:50'],
-            'address' => ['nullable', 'string', 'max:500'],
-            'cover_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'is_active' => ['nullable', 'boolean'],
+            'featured_image' => ['nullable', 'image', 'max:2048'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'max:2048'],
+            'address' => ['nullable', 'string'],
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'whatsapp' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'instagram' => ['nullable', 'string', 'max:255'],
+            'facebook' => ['nullable', 'string', 'max:255'],
+            'operating_hours' => ['nullable', 'string'],
+            'status' => ['required', Rule::enum(PublicationStatus::class)],
+            'is_featured' => ['nullable', 'boolean'],
+            'is_pinned' => ['nullable', 'boolean'],
+            'featured_order' => ['nullable', 'integer'],
         ];
     }
 }

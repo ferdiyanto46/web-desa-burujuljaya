@@ -4,24 +4,29 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Enums\PublicationStatus;
 use App\Http\Controllers\Controller;
-use App\Models\GalleryAlbum;
+use App\Http\Resources\GalleryResource;
+use App\Models\Gallery;
+use App\Services\GalleryService;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class GalleryController extends Controller
 {
+    public function __construct(
+        private readonly GalleryService $galleryService
+    ) {}
+
     /**
      * Display a listing of gallery albums.
      */
     public function index(): Response
     {
-        $albums = GalleryAlbum::withDetails()
-            ->latest()
-            ->paginate(12);
+        $galleries = $this->galleryService->getPublicPaginated();
 
         return Inertia::render('Public/Gallery/Index', [
-            'albums' => $albums,
+            'galleries' => GalleryResource::collection($galleries),
         ]);
     }
 
@@ -30,14 +35,16 @@ final class GalleryController extends Controller
      */
     public function show(string $slug): Response
     {
-        $album = GalleryAlbum::withDetails()
+        $gallery = Gallery::query()
             ->where('slug', $slug)
+            ->where('status', PublicationStatus::Published)
+            ->with(['author', 'photos' => function ($query) {
+                $query->orderBy('sort_order');
+            }])
             ->firstOrFail();
 
-        $album->load('photos');
-
         return Inertia::render('Public/Gallery/Show', [
-            'album' => $album,
+            'gallery' => new GalleryResource($gallery),
         ]);
     }
 }

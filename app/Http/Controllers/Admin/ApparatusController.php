@@ -11,6 +11,7 @@ use App\Models\Apparatus;
 use App\Models\ApparatusPosition;
 use App\Services\ApparatusService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,12 +25,34 @@ final class ApparatusController extends Controller
     /**
      * Display a listing of the apparatus.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $apparatuses = Apparatus::withDetails()->latest()->paginate(15);
+        $query = Apparatus::withDetails();
+
+        if ($request->filled('search')) {
+            $search = $request->string('search')->toString();
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('nip', 'like', "%{$search}%")
+                    ->orWhere('education', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('position_id')) {
+            $query->where('position_id', $request->integer('position_id'));
+        }
+
+        if ($request->filled('is_active')) {
+            $query->where('is_active', $request->boolean('is_active'));
+        }
+
+        $apparatuses = $query->latest()->paginate(10)->withQueryString();
+        $positions = ApparatusPosition::withCount('apparatuses')->orderBy('order')->get();
 
         return Inertia::render('Admin/Apparatus/Index', [
             'apparatuses' => $apparatuses,
+            'positions' => $positions,
+            'filters' => $request->only(['search', 'position_id', 'is_active']),
         ]);
     }
 
@@ -38,7 +61,7 @@ final class ApparatusController extends Controller
      */
     public function create(): Response
     {
-        $positions = ApparatusPosition::all();
+        $positions = ApparatusPosition::withCount('apparatuses')->orderBy('order')->get();
 
         return Inertia::render('Admin/Apparatus/Create', [
             'positions' => $positions,
@@ -57,7 +80,7 @@ final class ApparatusController extends Controller
 
         $this->apparatusService->appoint($data, $photo);
 
-        return redirect()->route('admin.apparatus.index')->with('success', 'Aparatur berhasil ditambahkan.');
+        return redirect()->route('admin.apparatus.index')->with('success', 'Perangkat desa berhasil ditambahkan.');
     }
 
     /**
@@ -65,7 +88,8 @@ final class ApparatusController extends Controller
      */
     public function edit(Apparatus $apparatus): Response
     {
-        $positions = ApparatusPosition::all();
+        $apparatus->load('position');
+        $positions = ApparatusPosition::withCount('apparatuses')->orderBy('order')->get();
 
         return Inertia::render('Admin/Apparatus/Edit', [
             'apparatus' => $apparatus,
@@ -85,7 +109,7 @@ final class ApparatusController extends Controller
 
         $this->apparatusService->update($apparatus, $data, $photo);
 
-        return redirect()->route('admin.apparatus.index')->with('success', 'Aparatur berhasil diperbarui.');
+        return redirect()->route('admin.apparatus.index')->with('success', 'Data perangkat desa berhasil diperbarui.');
     }
 
     /**
@@ -95,6 +119,6 @@ final class ApparatusController extends Controller
     {
         $this->apparatusService->remove($apparatus);
 
-        return redirect()->route('admin.apparatus.index')->with('success', 'Aparatur berhasil dihapus.');
+        return redirect()->route('admin.apparatus.index')->with('success', 'Perangkat desa berhasil dihapus.');
     }
 }

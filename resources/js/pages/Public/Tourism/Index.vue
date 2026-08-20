@@ -13,8 +13,8 @@ import { route } from '@/lib/route';
 
 const props = defineProps<{
     tourisms: {
-        data: Array<any>;
-        links: Array<any>;
+        data: any[];
+        links: any[];
         current_page: number;
         last_page: number;
         total: number;
@@ -90,7 +90,7 @@ const submit = debounce(() => {
                         class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                     >
                         <div class="relative h-64 overflow-hidden bg-gray-200 dark:bg-gray-700">
-                            <img v-if="tourism.thumbnail_url" :src="tourism.thumbnail_url" :alt="tourism.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                            <img v-if="tourism.featured_image_url" :src="tourism.featured_image_url" :alt="tourism.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                             <div v-else class="absolute inset-0 flex items-center justify-center"><component :is="Icons.MapIcon" class="w-12 h-12 text-gray-400" /></div>
                             
                             <div class="absolute top-4 left-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 shadow-sm">
@@ -100,11 +100,11 @@ const submit = debounce(() => {
                         
                         <div class="p-6 md:p-8 flex-grow flex flex-col">
                             <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                <Link :href="route('tourism.show', tourism.slug)">{{ tourism.name }}</Link>
+                                <Link :href="route('tourism.show', tourism.slug)">{{ tourism.title }}</Link>
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 flex items-start gap-1.5 mb-4 line-clamp-2 h-10">
                                 <component :is="Icons.MapIcon" class="w-4 h-4 flex-shrink-0 mt-0.5 text-red-500" />
-                                {{ tourism.location }}
+                                {{ tourism.address }}
                             </p>
                             <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-6 flex-grow">{{ tourism.description }}</p>
                             

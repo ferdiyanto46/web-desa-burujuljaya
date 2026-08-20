@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
+use App\Models\Agenda;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -16,7 +17,7 @@ final class StoreAgendaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('create', \App\Models\Agenda::class) ?? false;
+        return $this->user()?->can('create', Agenda::class) ?? false;
     }
 
     /**
@@ -33,7 +34,7 @@ final class StoreAgendaRequest extends FormRequest
             'location_url' => ['nullable', 'url', 'max:2048'],
             'start_datetime' => ['required', 'date'],
             'end_datetime' => ['nullable', 'date', 'after_or_equal:start_datetime'],
-            'status' => ['required', Rule::enum(ArticleStatus::class)],
+            'status' => ['required', Rule::enum(PublicationStatus::class)],
             'published_at' => ['nullable', 'date', 'required_if:status,published'],
             'featured_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'is_cancelled' => ['nullable', 'boolean'],

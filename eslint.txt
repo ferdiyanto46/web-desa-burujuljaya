@@ -1,0 +1,77 @@
+
+> lint
+> eslint . --fix
+
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\ContactInformation\Components\ContactInformationForm.vue
+  3:10  error  'ref' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\ContactInformation\Edit.vue
+  8:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\ContactInformation\Index.vue
+   4:10  error  'ref' is defined but never used             @typescript-eslint/no-unused-vars
+  12:7   error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\ContactInformation\Show.vue
+  10:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Faq\Index.vue
+  8:8  error  'StatusFilter' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Faq\Show.vue
+   2:16  error  'Link' is defined but never used            @typescript-eslint/no-unused-vars
+  12:7   error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Galleries\Index.vue
+  50:7  error  'getStatusColor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Products\Create.vue
+  9:52  error  'CardDescription' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Products\Index.vue
+  11:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Products\Show.vue
+  10:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Tourism\Create.vue
+  14:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Tourism\Index.vue
+   3:10  error  'format' is defined but never used          @typescript-eslint/no-unused-vars
+   4:10  error  'id' is defined but never used              @typescript-eslint/no-unused-vars
+  13:7   error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Umkm\Category\Index.vue
+  11:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Umkm\Create.vue
+   5:8   error  'FormDatePicker' is defined but never used   @typescript-eslint/no-unused-vars
+  11:52  error  'CardDescription' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\Umkm\Index.vue
+  11:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Admin\VillagePages\Index.vue
+   3:20  error  'PencilIcon' is defined but never used      @typescript-eslint/no-unused-vars
+   3:32  error  'TrashIcon' is defined but never used       @typescript-eslint/no-unused-vars
+   3:43  error  'RotateCcwIcon' is defined but never used   @typescript-eslint/no-unused-vars
+   3:58  error  'ArchiveXIcon' is defined but never used    @typescript-eslint/no-unused-vars
+  20:7   error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Frontend\Products\Show.vue
+  3:38  error  'MessageCircleIcon' is defined but never used  @typescript-eslint/no-unused-vars
+  3:57  error  'MapPinIcon' is defined but never used         @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Public\ContactInformation\Index.vue
+   2:33  error  'router' is defined but never used          @typescript-eslint/no-unused-vars
+   3:10  error  'ref' is defined but never used             @typescript-eslint/no-unused-vars
+   7:10  error  'Icons' is defined but never used           @typescript-eslint/no-unused-vars
+  11:7   error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\laragon\www\burujulJaya\resources\js\pages\Public\ContactInformation\Show.vue
+  8:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 32 problems (32 errors, 0 warnings)
+

@@ -72,6 +72,7 @@ test('password can be updated', function () {
 
     $response = $this
         ->actingAs($user)
+
         ->from(route('security.edit'))
         ->put(route('user-password.update'), [
             'current_password' => 'password',
@@ -91,6 +92,7 @@ test('correct password must be provided to update password', function () {
 
     $response = $this
         ->actingAs($user)
+
         ->from(route('security.edit'))
         ->put(route('user-password.update'), [
             'current_password' => 'wrong-password',

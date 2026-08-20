@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { Icons } from '@/constants/icons';
+import { route } from '@/lib/route';
 
 defineProps<{
     items: Array<{

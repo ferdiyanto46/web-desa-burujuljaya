@@ -7,7 +7,7 @@ import PublicLayout from '@/layouts/PublicLayout.vue';
 
 defineProps<{
     profile: any;
-    missions: Array<any>;
+    missions: any[];
 }>();
 </script>
 

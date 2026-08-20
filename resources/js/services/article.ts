@@ -11,7 +11,7 @@ export const ArticleService = {
         router.get(route('admin.articles.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.articles.store'), data, options);
     },
     
@@ -19,7 +19,7 @@ export const ArticleService = {
         router.get(route('admin.articles.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         // Use post with _method=PUT to support file uploads
         router.post(route('admin.articles.update', id), {
             _method: 'PUT',

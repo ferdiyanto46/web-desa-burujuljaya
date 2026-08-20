@@ -12,6 +12,7 @@ use App\Models\Agenda;
 use App\Services\AgendaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -26,7 +27,7 @@ final class AgendaController extends Controller
      */
     public function index(Request $request): Response
     {
-        \Illuminate\Support\Facades\Gate::authorize('viewAny', Agenda::class);
+        Gate::authorize('viewAny', Agenda::class);
 
         $query = Agenda::withDetails()->latest('start_datetime');
 
@@ -34,7 +35,7 @@ final class AgendaController extends Controller
             $search = $request->string('search')->toString();
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%");
+                    ->orWhere('location', 'like', "%{$search}%");
             });
         }
 
@@ -54,7 +55,7 @@ final class AgendaController extends Controller
      */
     public function create(): Response
     {
-        \Illuminate\Support\Facades\Gate::authorize('create', Agenda::class);
+        Gate::authorize('create', Agenda::class);
 
         return Inertia::render('Admin/Agendas/Create');
     }
@@ -78,7 +79,7 @@ final class AgendaController extends Controller
      */
     public function edit(Agenda $agenda): Response
     {
-        \Illuminate\Support\Facades\Gate::authorize('update', $agenda);
+        Gate::authorize('update', $agenda);
 
         return Inertia::render('Admin/Agendas/Edit', [
             'agenda' => new AgendaResource($agenda),
@@ -103,7 +104,7 @@ final class AgendaController extends Controller
      */
     public function destroy(Agenda $agenda): RedirectResponse
     {
-        \Illuminate\Support\Facades\Gate::authorize('delete', $agenda);
+        Gate::authorize('delete', $agenda);
 
         $this->agendaService->cancel($agenda);
 

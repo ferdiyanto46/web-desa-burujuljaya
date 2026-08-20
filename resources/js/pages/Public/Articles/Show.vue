@@ -7,13 +7,25 @@ import PublicLayout from '@/layouts/PublicLayout.vue';
 
 defineProps<{
     article: any;
-    relatedArticles: Array<any>;
+    relatedArticles: any[];
 }>();
 
 const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat('id-ID', {
         day: 'numeric', month: 'long', year: 'numeric'
     }).format(new Date(dateString));
+};
+
+const getArticleImage = (item: any): string | null => {
+    if (!item) return null;
+    if (item.cover_image_url) return item.cover_image_url;
+    if (item.featured_image_url) return item.featured_image_url;
+    if (item.featured_image_path) {
+        return item.featured_image_path.startsWith('http')
+            ? item.featured_image_path
+            : `/storage/${item.featured_image_path.replace(/^\//, '')}`;
+    }
+    return null;
 };
 
 
@@ -62,8 +74,8 @@ const formatDate = (dateString: string) => {
                         </div>
                     </div>
 
-                    <div v-if="article.cover_image_url" class="rounded-3xl overflow-hidden mb-10 shadow-md">
-                        <img :src="article.cover_image_url" :alt="article.title" class="w-full h-auto object-cover max-h-[500px]" />
+                    <div v-if="getArticleImage(article)" class="rounded-3xl overflow-hidden mb-10 shadow-md">
+                        <img :src="getArticleImage(article)!" :alt="article.title" class="w-full h-auto object-cover max-h-[500px]" />
                     </div>
 
                     <div class="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 mb-12">
@@ -91,7 +103,7 @@ const formatDate = (dateString: string) => {
                         <div v-if="relatedArticles?.length > 0" class="space-y-6">
                             <Link v-for="related in relatedArticles" :key="related.id" :href="route('articles.show', related.slug)" class="flex gap-4 group">
                                 <div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                    <img v-if="related.cover_image_url" :src="related.cover_image_url" :alt="related.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                    <img v-if="getArticleImage(related)" :src="getArticleImage(related)!" :alt="related.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                     <div v-else class="w-full h-full flex items-center justify-center"><component :is="Icons.ImageIcon" class="w-6 h-6 text-gray-400" /></div>
                                 </div>
                                 <div class="flex flex-col justify-center">

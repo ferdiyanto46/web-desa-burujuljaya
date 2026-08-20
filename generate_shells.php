@@ -1,4 +1,5 @@
 <?php
+
 $shells = [
     'resources/js/pages/Public/Profile/Index.vue' => 'Profil Desa',
     'resources/js/pages/Public/Articles/Index.vue' => 'Daftar Artikel',
@@ -27,7 +28,7 @@ $shells = [
 // Create dirs if not exist
 foreach ($shells as $path => $title) {
     $dir = dirname($path);
-    if (!is_dir($dir)) {
+    if (! is_dir($dir)) {
         mkdir($dir, 0755, true);
     }
 }
@@ -59,7 +60,7 @@ import EmptySection from '@/components/public/EmptySection.vue';
 </template>
 VUE;
 
-    if(!file_exists($path)) {
+    if (! file_exists($path)) {
         file_put_contents($path, $content);
         echo "Created $path\n";
     }

@@ -53,8 +53,8 @@ final class AgendaService
 
             if ($coverImage) {
                 $data['featured_image_path'] = $this->mediaService->replace(
-                    $coverImage, 
-                    $agenda->featured_image_path, 
+                    $coverImage,
+                    $agenda->featured_image_path,
                     'agendas'
                 );
             }
@@ -90,7 +90,7 @@ final class AgendaService
         if ($agenda->featured_image_path) {
             $this->mediaService->delete($agenda->featured_image_path);
         }
-        
+
         $agenda->forceDelete();
     }
 }

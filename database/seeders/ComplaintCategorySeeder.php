@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\ComplaintCategory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 final class ComplaintCategorySeeder extends Seeder
 {
@@ -25,10 +26,14 @@ final class ComplaintCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            ComplaintCategory::factory()->create([
-                'name' => $category,
-                'slug' => strtolower(str_replace(' & ', '-', str_replace(' ', '-', $category))),
-            ]);
+            $slug = Str::slug($category);
+            ComplaintCategory::firstOrCreate(
+                ['slug' => $slug],
+                [
+                    'name' => $category,
+                    'is_active' => true,
+                ]
+            );
         }
     }
 }

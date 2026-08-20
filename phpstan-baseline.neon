@@ -1,0 +1,1453 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Enums\\PublicationStatus\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Resources/GalleryResource.php
+
+		-
+			message: '#^Method App\\Listeners\\ActivityLogSubscriber\:\:handleEloquentEvent\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Listeners/ActivityLogSubscriber.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/ActivityLog.php
+
+		-
+			message: '#^Method App\\Models\\ActivityLog\:\:scopeInLog\(\) has parameter \$logNames with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/ActivityLog.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Agenda.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Agenda.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Agenda.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Announcement.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Announcement.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Announcement.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Apparatus.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Article.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Article.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Article.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/ArticleCategory.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/ArticleCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Banner.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Complaint.php
+
+		-
+			message: '#^Generic type Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\ComplaintAttachment\> in PHPDoc tag @return does not specify all template types of class Illuminate\\Database\\Eloquent\\Relations\\HasMany\: TRelatedModel, TDeclaringModel$#'
+			identifier: generics.lessTypes
+			count: 1
+			path: app/Models/Complaint.php
+
+		-
+			message: '#^Generic type Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\ComplaintHistory\> in PHPDoc tag @return does not specify all template types of class Illuminate\\Database\\Eloquent\\Relations\\HasMany\: TRelatedModel, TDeclaringModel$#'
+			identifier: generics.lessTypes
+			count: 1
+			path: app/Models/Complaint.php
+
+		-
+			message: '#^Method App\\Models\\Complaint\:\:attachments\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\ComplaintAttachment\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\ComplaintAttachment, \$this\(App\\Models\\Complaint\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Complaint.php
+
+		-
+			message: '#^Method App\\Models\\Complaint\:\:histories\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\ComplaintHistory\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\ComplaintHistory, \$this\(App\\Models\\Complaint\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Complaint.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/ComplaintAttachment.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/ComplaintCategory.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\ComplaintCategory\>\:\:withTrashed\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/ComplaintCategory.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/ComplaintCategory.php
+
+		-
+			message: '#^Generic type Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Complaint\> in PHPDoc tag @return does not specify all template types of class Illuminate\\Database\\Eloquent\\Relations\\HasMany\: TRelatedModel, TDeclaringModel$#'
+			identifier: generics.lessTypes
+			count: 1
+			path: app/Models/ComplaintCategory.php
+
+		-
+			message: '#^Method App\\Models\\ComplaintCategory\:\:complaints\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Complaint\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Complaint, \$this\(App\\Models\\ComplaintCategory\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/ComplaintCategory.php
+
+		-
+			message: '#^Class App\\Models\\ComplaintHistory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ComplaintHistory.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ComplaintHistory\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ComplaintHistory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/ContactInformation.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/ContactInformation.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/ContactInformation.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/ContactMessage.php
+
+		-
+			message: '#^Class App\\Models\\ContactMessage uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ContactMessage.php
+
+		-
+			message: '#^Method App\\Models\\ContactMessage\:\:scopeUnread\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ContactMessage.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ContactMessage\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ContactMessage.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Document.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Document.php
+
+		-
+			message: '#^Class App\\Models\\Document uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Method App\\Models\\Document\:\:author\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Method App\\Models\\Document\:\:category\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Method App\\Models\\Document\:\:scopePinned\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Method App\\Models\\Document\:\:scopePublished\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Method App\\Models\\Document\:\:scopeSearch\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Method App\\Models\\Document\:\:scopeWithDetails\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Document\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Document.php
+
+		-
+			message: '#^Class App\\Models\\DocumentCategory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DocumentCategory.php
+
+		-
+			message: '#^Method App\\Models\\DocumentCategory\:\:documents\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DocumentCategory.php
+
+		-
+			message: '#^Method App\\Models\\DocumentCategory\:\:scopeActive\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DocumentCategory.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\DocumentCategory\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/DocumentCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Faq.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Faq.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Faq.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Class App\\Models\\Gallery uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Method App\\Models\\Gallery\:\:author\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Method App\\Models\\Gallery\:\:photos\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Method App\\Models\\Gallery\:\:scopePublished\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Method App\\Models\\Gallery\:\:scopePublished\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Gallery.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/GalleryPhoto.php
+
+		-
+			message: '#^Class App\\Models\\GalleryPhoto uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/GalleryPhoto.php
+
+		-
+			message: '#^Method App\\Models\\GalleryPhoto\:\:gallery\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/GalleryPhoto.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Product.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Product.php
+
+		-
+			message: '#^Class App\\Models\\Product uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:author\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:category\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:photos\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeFeatured\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopePopular\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopePublished\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeSearch\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeSearch\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeWithDetails\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:umkm\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\ProductCategory\>\:\:withTrashed\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Class App\\Models\\ProductCategory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/ProductPhoto.php
+
+		-
+			message: '#^Class App\\Models\\ProductPhoto uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductPhoto.php
+
+		-
+			message: '#^Method App\\Models\\ProductPhoto\:\:product\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductPhoto.php
+
+		-
+			message: '#^Class App\\Models\\Setting has PHPDoc tag @property for property \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Setting.php
+
+		-
+			message: '#^Class App\\Models\\StatisticCategory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/StatisticCategory.php
+
+		-
+			message: '#^Method App\\Models\\StatisticCategory\:\:scopeActive\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/StatisticCategory.php
+
+		-
+			message: '#^Method App\\Models\\StatisticCategory\:\:statistics\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/StatisticCategory.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\StatisticCategory\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/StatisticCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Class App\\Models\\Tourism uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:author\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:category\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:facilities\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:photos\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeFeatured\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeFeatured\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeLatest\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeLatest\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeNearby\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeNearby\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopePopular\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopePopular\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopePublished\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopePublished\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeSearch\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeSearch\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeWithDetails\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Method App\\Models\\Tourism\:\:scopeWithDetails\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tourism.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/TourismCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TourismCategory.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/TourismCategory.php
+
+		-
+			message: '#^Class App\\Models\\TourismCategory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/TourismCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TourismFacility.php
+
+		-
+			message: '#^Class App\\Models\\TourismFacility uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/TourismFacility.php
+
+		-
+			message: '#^Method App\\Models\\TourismFacility\:\:tourisms\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/TourismFacility.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TourismPhoto.php
+
+		-
+			message: '#^Class App\\Models\\TourismPhoto uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/TourismPhoto.php
+
+		-
+			message: '#^Method App\\Models\\TourismPhoto\:\:tourism\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/TourismPhoto.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Class App\\Models\\Umkm uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:category\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:photos\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:scopeFeatured\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:scopeLatest\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:scopePopular\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:scopePublished\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Method App\\Models\\Umkm\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Umkm.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/UmkmCategory.php
+
+		-
+			message: '#^Class App\\Models\\UmkmCategory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UmkmCategory.php
+
+		-
+			message: '#^Method App\\Models\\UmkmCategory\:\:umkms\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UmkmCategory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/UmkmPhoto.php
+
+		-
+			message: '#^Method App\\Models\\UmkmPhoto\:\:umkm\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UmkmPhoto.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Video.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Video.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Video.php
+
+		-
+			message: '#^Class App\\Models\\Video uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Video.php
+
+		-
+			message: '#^Method App\\Models\\Video\:\:scopeActive\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Video.php
+
+		-
+			message: '#^Method App\\Models\\Video\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Video.php
+
+		-
+			message: '#^Method App\\Models\\Video\:\:videoUrl\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Video.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/VillagePage.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/VillagePage.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/VillagePage.php
+
+		-
+			message: '#^Class App\\Models\\VillagePage uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/VillagePage.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Models/VillageProfile.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/VillageService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ulid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/VillageService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getSlugSourceColumn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/VillageService.php
+
+		-
+			message: '#^Class App\\Models\\VillageStatistic uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/VillageStatistic.php
+
+		-
+			message: '#^Method App\\Models\\VillageStatistic\:\:category\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/VillageStatistic.php
+
+		-
+			message: '#^Method App\\Models\\VillageStatistic\:\:scopeByYear\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/VillageStatistic.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\VillageStatistic\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/VillageStatistic.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\GalleryPhoto\:\:\$photo_path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/GalleryPhotoObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Product\:\:\$cover_image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/ProductObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Product\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Observers/ProductObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tourism\:\:\$cover_image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/TourismObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tourism\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Observers/TourismObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Umkm\:\:\$cover_image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/UmkmObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Umkm\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Observers/UmkmObserver.php
+
+		-
+			message: '#^Method App\\Services\\ActivityLogService\:\:log\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/ActivityLogService.php
+
+		-
+			message: '#^Method App\\Services\\AuditService\:\:getSecurityLogs\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/AuditService.php
+
+		-
+			message: '#^Method App\\Services\\BackupService\:\:getBackups\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/BackupService.php
+
+		-
+			message: '#^Method App\\Services\\DashboardService\:\:getMostViewedContent\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/DashboardService.php
+
+		-
+			message: '#^Method App\\Services\\DocumentService\:\:getAdminPaginated\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/DocumentService.php
+
+		-
+			message: '#^Method App\\Services\\DocumentService\:\:getPublicPaginated\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/DocumentService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryPhotoService\:\:reorderPhotos\(\) has parameter \$photoUlids with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/GalleryPhotoService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryPhotoService\:\:updatePhoto\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/GalleryPhotoService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryPhotoService\:\:uploadPhotos\(\) return type with generic class Illuminate\\Database\\Eloquent\\Collection does not specify its types\: TKey, TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/GalleryPhotoService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryPhotoService\:\:uploadPhotos\(\) should return Illuminate\\Database\\Eloquent\\Collection but returns Illuminate\\Support\\Collection\<int, App\\Models\\GalleryPhoto\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/GalleryPhotoService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:withTrashed\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/GalleryService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryService\:\:createGallery\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/GalleryService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryService\:\:getAdminPaginated\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/GalleryService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryService\:\:getAdminPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/GalleryService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryService\:\:getPublicPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/GalleryService.php
+
+		-
+			message: '#^Method App\\Services\\GalleryService\:\:updateGallery\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/GalleryService.php
+
+		-
+			message: '#^Method App\\Services\\ProductCategoryService\:\:getPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/ProductCategoryService.php
+
+		-
+			message: '#^Instanceof between Illuminate\\Http\\UploadedFile and Illuminate\\Http\\UploadedFile will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Method App\\Services\\ProductService\:\:getPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Method App\\Services\\ProductService\:\:getPublicPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Method App\\Services\\TourismCategoryService\:\:getAll\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/TourismCategoryService.php
+
+		-
+			message: '#^Method App\\Services\\TourismCategoryService\:\:getPaginated\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismCategoryService.php
+
+		-
+			message: '#^Method App\\Services\\TourismCategoryService\:\:getPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/TourismCategoryService.php
+
+		-
+			message: '#^Method App\\Services\\TourismCategoryService\:\:store\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismCategoryService.php
+
+		-
+			message: '#^Method App\\Services\\TourismCategoryService\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismCategoryService.php
+
+		-
+			message: '#^Method App\\Services\\TourismFacilityService\:\:getAll\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/TourismFacilityService.php
+
+		-
+			message: '#^Method App\\Services\\TourismFacilityService\:\:getPaginated\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismFacilityService.php
+
+		-
+			message: '#^Method App\\Services\\TourismFacilityService\:\:getPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/TourismFacilityService.php
+
+		-
+			message: '#^Method App\\Services\\TourismFacilityService\:\:store\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismFacilityService.php
+
+		-
+			message: '#^Method App\\Services\\TourismFacilityService\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismFacilityService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$file_path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:fillTourismData\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:getAdminPaginated\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:getAdminPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:getPublicPaginated\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:getPublicPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:handleGalleryUploads\(\) has parameter \$files with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:store\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\TourismService\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/TourismService.php
+
+		-
+			message: '#^Method App\\Services\\UmkmCategoryService\:\:getAllForSelect\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/UmkmCategoryService.php
+
+		-
+			message: '#^Method App\\Services\\UmkmCategoryService\:\:getPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/UmkmCategoryService.php
+
+		-
+			message: '#^Instanceof between Illuminate\\Http\\UploadedFile and Illuminate\\Http\\UploadedFile will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: app/Services/UmkmService.php
+
+		-
+			message: '#^Method App\\Services\\UmkmService\:\:getPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/UmkmService.php
+
+		-
+			message: '#^Method App\\Services\\UmkmService\:\:getPublicPaginated\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/UmkmService.php
+
+		-
+			message: '#^Method App\\Services\\VillagePageService\:\:getPaginatedForAdmin\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/VillagePageService.php
+
+		-
+			message: '#^Method App\\Services\\VillagePageService\:\:getPaginatedForPublic\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/VillagePageService.php
+
+		-
+			message: '#^Binary operation "\." between ''Agenda '' and array\|string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: database/factories/AgendaFactory.php
+
+		-
+			message: '#^PHPDoc type string of property Database\\Factories\\AgendaFactory\:\:\$model is not covariant with PHPDoc type class\-string\<App\\Models\\Agenda\> of overridden property Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Agenda\>\:\:\$model\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: database/factories/AgendaFactory.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/AgendaFactory.php
+
+		-
+			message: '#^PHPDoc type string of property Database\\Factories\\AnnouncementFactory\:\:\$model is not covariant with PHPDoc type class\-string\<App\\Models\\Announcement\> of overridden property Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Announcement\>\:\:\$model\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: database/factories/AnnouncementFactory.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/AnnouncementFactory.php
+
+		-
+			message: '#^PHPDoc type string of property Database\\Factories\\ApparatusFactory\:\:\$model is not covariant with PHPDoc type class\-string\<App\\Models\\Apparatus\> of overridden property Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Apparatus\>\:\:\$model\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: database/factories/ApparatusFactory.php
+
+		-
+			message: '#^PHPDoc type string of property Database\\Factories\\ApparatusPositionFactory\:\:\$model is not covariant with PHPDoc type class\-string\<App\\Models\\ApparatusPosition\> of overridden property Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\ApparatusPosition\>\:\:\$model\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: database/factories/ApparatusPositionFactory.php
+
+		-
+			message: '#^Parameter \#1 \$value of function collect expects Illuminate\\Contracts\\Support\\Arrayable\<\(int\|string\), mixed\>\|iterable\<\(int\|string\), mixed\>\|null, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/ArticleFactory.php
+
+		-
+			message: '#^Parameter \#1 \$string of function ucwords expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/ComplaintCategoryFactory.php
+
+		-
+			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/ComplaintCategoryFactory.php
+
+		-
+			message: '#^Cannot cast array\|string to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: database/factories/DocumentCategoryFactory.php
+
+		-
+			message: '#^Class Database\\Factories\\DocumentCategoryFactory extends generic class Illuminate\\Database\\Eloquent\\Factories\\Factory but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: database/factories/DocumentCategoryFactory.php
+
+		-
+			message: '#^Class Database\\Factories\\DocumentFactory extends generic class Illuminate\\Database\\Eloquent\\Factories\\Factory but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: database/factories/DocumentFactory.php
+
+		-
+			message: '#^PHPDoc type string of property Database\\Factories\\FaqFactory\:\:\$model is not covariant with PHPDoc type class\-string\<App\\Models\\Faq\> of overridden property Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Faq\>\:\:\$model\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: database/factories/FaqFactory.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str expects string\|null, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/ProductCategoryFactory.php
+
+		-
+			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/ProductCategoryFactory.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str expects string\|null, array\|string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: database/factories/ProductFactory.php
+
+		-
+			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/ProductFactory.php
+
+		-
+			message: '#^Class Database\\Factories\\StatisticCategoryFactory extends generic class Illuminate\\Database\\Eloquent\\Factories\\Factory but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: database/factories/StatisticCategoryFactory.php
+
+		-
+			message: '#^Parameter \#1 \$string of function ucwords expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/TourismCategoryFactory.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str expects string\|null, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/UmkmCategoryFactory.php
+
+		-
+			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/UmkmCategoryFactory.php
+
+		-
+			message: '#^Class Database\\Factories\\VillagePageFactory extends generic class Illuminate\\Database\\Eloquent\\Factories\\Factory but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: database/factories/VillagePageFactory.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/VillagePageFactory.php
+
+		-
+			message: '#^Class Database\\Factories\\VillageStatisticFactory extends generic class Illuminate\\Database\\Eloquent\\Factories\\Factory but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: database/factories/VillageStatisticFactory.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:comment\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2026_07_23_000003_create_village_missions_table.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 3
+			path: database/seeders/UserSeeder.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Facades\\Hash\:\:make\(\) expects string, bool\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/seeders/UserSeeder.php

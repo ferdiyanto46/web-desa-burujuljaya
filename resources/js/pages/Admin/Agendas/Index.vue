@@ -9,11 +9,8 @@ import StatusFilter from '@/components/filters/StatusFilter.vue';
 import DataTable from '@/components/tables/DataTable.vue';
 import DataTablePagination from '@/components/tables/DataTablePagination.vue';
 import DataTableToolbar from '@/components/tables/DataTableToolbar.vue';
-import AdminLayout from '@/layouts/AdminLayout.vue';
 import { route } from '@/lib/route';
 import type { PaginationData, Agenda } from '@/types';
-
-defineOptions({ layout: AdminLayout });
 
 interface Props {
     agendas: PaginationData<Agenda>;

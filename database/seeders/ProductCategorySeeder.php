@@ -23,10 +23,10 @@ final class ProductCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            ProductCategory::create([
-                'name' => $category,
-                'slug' => Str::slug($category),
-            ]);
+            ProductCategory::firstOrCreate(
+                ['slug' => Str::slug($category)],
+                ['name' => $category]
+            );
         }
     }
 }

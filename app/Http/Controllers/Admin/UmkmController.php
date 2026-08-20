@@ -7,94 +7,112 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUmkmRequest;
 use App\Http\Requests\Admin\UpdateUmkmRequest;
+use App\Http\Resources\UmkmCategoryResource;
+use App\Http\Resources\UmkmResource;
 use App\Models\Umkm;
 use App\Models\UmkmCategory;
 use App\Services\UmkmService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class UmkmController extends Controller
+class UmkmController extends Controller
 {
     public function __construct(
-        private readonly UmkmService $umkmService
+        private readonly UmkmService $umkmService,
     ) {}
 
-    /**
-     * Display a listing of the UMKM.
-     */
     public function index(): Response
     {
-        $umkms = Umkm::withDetails()->latest()->paginate(15);
+        Gate::authorize('viewAny', Umkm::class);
+
+        $umkms = Umkm::query()->with('category')->latest()->paginate(10);
 
         return Inertia::render('Admin/Umkm/Index', [
-            'umkms' => $umkms,
+            'umkms' => UmkmResource::collection($umkms),
         ]);
     }
 
-    /**
-     * Show the form for creating a new UMKM.
-     */
     public function create(): Response
     {
-        $categories = UmkmCategory::all();
+        Gate::authorize('create', Umkm::class);
 
         return Inertia::render('Admin/Umkm/Create', [
-            'categories' => $categories,
+            'categories' => UmkmCategoryResource::collection(UmkmCategory::all()),
         ]);
     }
 
-    /**
-     * Store a newly created UMKM in storage.
-     */
     public function store(StoreUmkmRequest $request): RedirectResponse
     {
-        $data = $request->validated();
+        Gate::authorize('create', Umkm::class);
 
-        /** @var UploadedFile|null $coverImage */
-        $coverImage = $request->file('cover_image');
+        $this->umkmService->store($request->validated(), $request->file('featured_image'), $request->file('gallery') ?? []);
 
-        $this->umkmService->create($data, $coverImage);
-
-        return redirect()->route('admin.umkm.index')->with('success', 'UMKM berhasil ditambahkan.');
+        return redirect()->route('admin.umkm.index')
+            ->with('success', 'UMKM created successfully.');
     }
 
-    /**
-     * Show the form for editing the specified UMKM.
-     */
-    public function edit(Umkm $umkm): Response
+    public function show(Umkm $umkm): Response
     {
-        $categories = UmkmCategory::all();
+        Gate::authorize('view', $umkm);
 
-        return Inertia::render('Admin/Umkm/Edit', [
-            'umkm' => $umkm,
-            'categories' => $categories,
+        $umkm->load('category', 'photos');
+
+        return Inertia::render('Admin/Umkm/Show', [
+            'umkm' => new UmkmResource($umkm),
         ]);
     }
 
-    /**
-     * Update the specified UMKM in storage.
-     */
-    public function update(UpdateUmkmRequest $request, Umkm $umkm): RedirectResponse
+    public function edit(Umkm $umkm): Response
     {
-        $data = $request->validated();
+        Gate::authorize('update', $umkm);
 
-        /** @var UploadedFile|null $coverImage */
-        $coverImage = $request->file('cover_image');
+        $umkm->load('photos');
 
-        $this->umkmService->update($umkm, $data, $coverImage);
-
-        return redirect()->route('admin.umkm.index')->with('success', 'UMKM berhasil diperbarui.');
+        return Inertia::render('Admin/Umkm/Edit', [
+            'umkm' => new UmkmResource($umkm),
+            'categories' => UmkmCategoryResource::collection(UmkmCategory::all()),
+        ]);
     }
 
-    /**
-     * Remove the specified UMKM from storage.
-     */
+    public function update(UpdateUmkmRequest $request, Umkm $umkm): RedirectResponse
+    {
+        Gate::authorize('update', $umkm);
+
+        $this->umkmService->update($umkm, $request->validated(), $request->file('featured_image'), $request->file('gallery') ?? []);
+
+        return redirect()->route('admin.umkm.index')
+            ->with('success', 'UMKM updated successfully.');
+    }
+
     public function destroy(Umkm $umkm): RedirectResponse
     {
-        $this->umkmService->remove($umkm);
+        Gate::authorize('delete', $umkm);
 
-        return redirect()->route('admin.umkm.index')->with('success', 'UMKM berhasil dihapus.');
+        $this->umkmService->delete($umkm);
+
+        return redirect()->route('admin.umkm.index')
+            ->with('success', 'UMKM deleted successfully.');
+    }
+
+    public function restore(Umkm $umkm): RedirectResponse
+    {
+        Gate::authorize('restore', $umkm);
+
+        $this->umkmService->restore($umkm);
+
+        return redirect()->route('admin.umkm.index')
+            ->with('success', 'UMKM restored successfully.');
+    }
+
+    public function forceDelete(Umkm $umkm): RedirectResponse
+    {
+        Gate::authorize('forceDelete', $umkm);
+
+        $this->umkmService->forceDelete($umkm);
+
+        return redirect()->route('admin.umkm.index')
+            ->with('success', 'UMKM permanently deleted.');
     }
 }

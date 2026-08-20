@@ -5,96 +5,158 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreTourismRequest;
-use App\Http\Requests\Admin\UpdateTourismRequest;
+use App\Http\Requests\StoreTourismRequest;
+use App\Http\Requests\UpdateTourismRequest;
+use App\Http\Resources\TourismCategoryResource;
+use App\Http\Resources\TourismFacilityResource;
+use App\Http\Resources\TourismResource;
 use App\Models\Tourism;
-use App\Models\TourismCategory;
+use App\Services\TourismCategoryService;
+use App\Services\TourismFacilityService;
 use App\Services\TourismService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class TourismController extends Controller
 {
     public function __construct(
-        private readonly TourismService $tourismService
+        private readonly TourismService $service,
+        private readonly TourismCategoryService $categoryService,
+        private readonly TourismFacilityService $facilityService
     ) {}
 
     /**
-     * Display a listing of the tourism spots.
+     * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $tourisms = Tourism::withDetails()->latest()->paginate(15);
+        $this->authorize('viewAny', Tourism::class);
+
+        $tourisms = $this->service->getAdminPaginated(
+            filters: $request->only(['search', 'status', 'category_id']),
+            perPage: (int) $request->input('per_page', 10)
+        );
+
+        $categories = $this->categoryService->getAll();
 
         return Inertia::render('Admin/Tourism/Index', [
-            'tourisms' => $tourisms,
+            'tourisms' => TourismResource::collection($tourisms),
+            'categories' => TourismCategoryResource::collection($categories),
+            'filters' => $request->only(['search', 'status', 'category_id']),
         ]);
     }
 
     /**
-     * Show the form for creating a new tourism spot.
+     * Show the form for creating a new resource.
      */
     public function create(): Response
     {
-        $categories = TourismCategory::all();
+        $this->authorize('create', Tourism::class);
+
+        $categories = $this->categoryService->getAll();
+        $facilities = $this->facilityService->getAll();
 
         return Inertia::render('Admin/Tourism/Create', [
-            'categories' => $categories,
+            'categories' => TourismCategoryResource::collection($categories),
+            'facilities' => TourismFacilityResource::collection($facilities),
         ]);
     }
 
     /**
-     * Store a newly created tourism spot in storage.
+     * Store a newly created resource in storage.
      */
     public function store(StoreTourismRequest $request): RedirectResponse
     {
-        $data = $request->validated();
+        $this->authorize('create', Tourism::class);
 
-        /** @var UploadedFile|null $coverImage */
-        $coverImage = $request->file('cover_image');
+        $this->service->store($request->validated(), (int) Auth::id());
 
-        $this->tourismService->create($data, $coverImage);
-
-        return redirect()->route('admin.tourism.index')->with('success', 'Wisata berhasil ditambahkan.');
+        return redirect()->route('admin.tourisms.index')
+            ->with('success', 'Destinasi wisata berhasil ditambahkan.');
     }
 
     /**
-     * Show the form for editing the specified tourism spot.
+     * Display the specified resource.
      */
-    public function edit(Tourism $tourism): Response
+    public function show(Tourism $tourism): Response
     {
-        $categories = TourismCategory::all();
+        $this->authorize('view', $tourism);
 
-        return Inertia::render('Admin/Tourism/Edit', [
-            'tourism' => $tourism,
-            'categories' => $categories,
+        $tourism->load(['category', 'author', 'facilities', 'photos']);
+
+        return Inertia::render('Admin/Tourism/Show', [
+            'tourism' => new TourismResource($tourism),
         ]);
     }
 
     /**
-     * Update the specified tourism spot in storage.
+     * Show the form for editing the specified resource.
      */
-    public function update(UpdateTourismRequest $request, Tourism $tourism): RedirectResponse
+    public function edit(Tourism $tourism): Response
     {
-        $data = $request->validated();
+        $this->authorize('update', $tourism);
 
-        /** @var UploadedFile|null $coverImage */
-        $coverImage = $request->file('cover_image');
+        $tourism->load(['facilities', 'photos']);
+        $categories = $this->categoryService->getAll();
+        $facilities = $this->facilityService->getAll();
 
-        $this->tourismService->update($tourism, $data, $coverImage);
-
-        return redirect()->route('admin.tourism.index')->with('success', 'Wisata berhasil diperbarui.');
+        return Inertia::render('Admin/Tourism/Edit', [
+            'tourism' => new TourismResource($tourism),
+            'categories' => TourismCategoryResource::collection($categories),
+            'facilities' => TourismFacilityResource::collection($facilities),
+        ]);
     }
 
     /**
-     * Remove the specified tourism spot from storage.
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateTourismRequest $request, Tourism $tourism): RedirectResponse
+    {
+        $this->authorize('update', $tourism);
+
+        $this->service->update($tourism, $request->validated());
+
+        return redirect()->route('admin.tourisms.index')
+            ->with('success', 'Destinasi wisata berhasil diperbarui.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
      */
     public function destroy(Tourism $tourism): RedirectResponse
     {
-        $this->tourismService->remove($tourism);
+        $this->authorize('delete', $tourism);
 
-        return redirect()->route('admin.tourism.index')->with('success', 'Wisata berhasil dihapus.');
+        $this->service->delete($tourism);
+
+        return redirect()->route('admin.tourisms.index')
+            ->with('success', 'Destinasi wisata berhasil diarsipkan.');
+    }
+
+    /**
+     * Restore the specified resource.
+     */
+    public function restore(Tourism $tourism): RedirectResponse
+    {
+        $this->authorize('restore', $tourism);
+
+        $this->service->restore($tourism);
+
+        return back()->with('success', 'Destinasi wisata berhasil dipulihkan.');
+    }
+
+    /**
+     * Force delete the specified resource.
+     */
+    public function forceDelete(Tourism $tourism): RedirectResponse
+    {
+        $this->authorize('forceDelete', $tourism);
+
+        $this->service->forceDelete($tourism);
+
+        return back()->with('success', 'Destinasi wisata berhasil dihapus permanen.');
     }
 }

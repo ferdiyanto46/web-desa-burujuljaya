@@ -8,8 +8,8 @@ import PublicLayout from '@/layouts/PublicLayout.vue';
 
 defineProps<{
     announcements: {
-        data: Array<any>;
-        links: Array<any>;
+        data: any[];
+        links: any[];
         current_page: number;
         last_page: number;
         total: number;

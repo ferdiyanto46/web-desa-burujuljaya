@@ -50,6 +50,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $sort_order
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
+ *
+ * @method static Builder<static>|Setting editable()
+ * @method static Builder<static>|Setting forGroup(string $group)
+ * @method static Builder<static>|Setting newModelQuery()
+ * @method static Builder<static>|Setting newQuery()
+ * @method static Builder<static>|Setting public()
+ * @method static Builder<static>|Setting query()
+ * @method static Builder<static>|Setting whereCreatedAt($value)
+ * @method static Builder<static>|Setting whereDescription($value)
+ * @method static Builder<static>|Setting whereGroup($value)
+ * @method static Builder<static>|Setting whereId($value)
+ * @method static Builder<static>|Setting whereIsEditable($value)
+ * @method static Builder<static>|Setting whereIsEncrypted($value)
+ * @method static Builder<static>|Setting whereIsPublic($value)
+ * @method static Builder<static>|Setting whereKey($value)
+ * @method static Builder<static>|Setting whereLabel($value)
+ * @method static Builder<static>|Setting whereOptions($value)
+ * @method static Builder<static>|Setting whereSortOrder($value)
+ * @method static Builder<static>|Setting whereType($value)
+ * @method static Builder<static>|Setting whereUpdatedAt($value)
+ * @method static Builder<static>|Setting whereValue($value)
+ *
+ * @mixin \Eloquent
  */
 #[ObservedBy(SettingObserver::class)]
 final class Setting extends Model

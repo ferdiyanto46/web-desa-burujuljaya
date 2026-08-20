@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Represents a village official or apparatus.
@@ -29,6 +30,30 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read ApparatusPosition $position
+ * @property-read string|null $photo_url
+ *
+ * @method static \Database\Factories\ApparatusFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Apparatus newModelQuery()
+ * @method static Builder<static>|Apparatus newQuery()
+ * @method static Builder<static>|Apparatus onlyTrashed()
+ * @method static Builder<static>|Apparatus query()
+ * @method static Builder<static>|Apparatus whereCreatedAt($value)
+ * @method static Builder<static>|Apparatus whereDeletedAt($value)
+ * @method static Builder<static>|Apparatus whereEducation($value)
+ * @method static Builder<static>|Apparatus whereId($value)
+ * @method static Builder<static>|Apparatus whereIsActive($value)
+ * @method static Builder<static>|Apparatus whereName($value)
+ * @method static Builder<static>|Apparatus whereNip($value)
+ * @method static Builder<static>|Apparatus wherePhotoPath($value)
+ * @method static Builder<static>|Apparatus wherePositionId($value)
+ * @method static Builder<static>|Apparatus whereUlid($value)
+ * @method static Builder<static>|Apparatus whereUpdatedAt($value)
+ * @method static Builder<static>|Apparatus withDetails()
+ * @method static Builder<static>|Apparatus withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Apparatus withoutTrashed()
+ *
+ * @mixin \Eloquent
  */
 #[ObservedBy(ApparatusObserver::class)]
 final class Apparatus extends Model
@@ -59,6 +84,13 @@ final class Apparatus extends Model
     ];
 
     /**
+     * @var list<string>
+     */
+    protected $appends = [
+        'photo_url',
+    ];
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array
@@ -80,6 +112,38 @@ final class Apparatus extends Model
     public function position(): BelongsTo
     {
         return $this->belongsTo(ApparatusPosition::class, 'position_id');
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Accessors
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Get the public URL for the apparatus photo.
+     */
+    public function photoUrl(): ?string
+    {
+        if (! $this->photo_path) {
+            return null;
+        }
+
+        if (config('filesystems.disks.public.driver') === 'local') {
+            if (! Storage::disk('public')->exists($this->photo_path)) {
+                return null;
+            }
+
+            return '/storage/'.ltrim($this->photo_path, '/');
+        }
+
+        return Storage::disk('public')->url($this->photo_path);
+    }
+
+    /**
+     * Accessor for photo_url attribute.
+     */
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photoUrl();
     }
 
     // ──────────────────────────────────────────────────────────────────────────

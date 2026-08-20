@@ -4,54 +4,58 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Enums\PublicationStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductCategoryResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class ProductController extends Controller
 {
-    /**
-     * Display a listing of products.
-     */
+    public function __construct(
+        private readonly ProductService $productService
+    ) {}
+
     public function index(Request $request): Response
     {
-        $query = Product::withDetails()->where('is_active', true)->latest();
+        $query = Product::where('status', PublicationStatus::Published);
 
-        if ($request->has('kategori')) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('slug', $request->string('kategori')->toString());
-            });
+        if ($request->filled('kategori')) {
+            $slug = $request->kategori;
+            $category = ProductCategory::where('slug', $slug)->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
         }
 
-        if ($request->has('cari')) {
-            $query->where('name', 'like', '%'.$request->string('cari')->toString().'%');
+        if ($request->filled('cari')) {
+            $query->where('name', 'like', '%'.$request->cari.'%');
         }
 
-        $products = $query->paginate(12)->withQueryString();
-        $categories = ProductCategory::all();
+        $products = $query->latest()->paginate(12)->withQueryString();
 
-        return Inertia::render('Public/Products/Index', [
-            'products' => $products,
-            'categories' => $categories,
-            'filters' => $request->only(['kategori', 'cari']),
+        return Inertia::render('Frontend/Products/Index', [
+            'products' => ProductResource::collection($products),
+            'categories' => ProductCategoryResource::collection(ProductCategory::all()),
+            'filters' => $request->only(['cari', 'kategori']),
         ]);
     }
 
-    /**
-     * Display the specified product.
-     */
-    public function show(string $slug): Response
+    public function show(Product $product): Response
     {
-        $product = Product::withDetails()
-            ->where('is_active', true)
-            ->where('slug', $slug)
-            ->firstOrFail();
+        if ($product->status !== PublicationStatus::Published) {
+            abort(404);
+        }
 
-        return Inertia::render('Public/Products/Show', [
-            'product' => $product,
+        $this->productService->incrementViewCount($product);
+
+        return Inertia::render('Frontend/Products/Show', [
+            'product' => new ProductResource($product->load(['category', 'author', 'umkm', 'photos'])),
         ]);
     }
 }

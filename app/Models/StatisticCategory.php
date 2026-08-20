@@ -4,11 +4,37 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property bool $is_active
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $updated_at
+ * @property-read Collection<int, VillageStatistic> $statistics
+ * @property-read int|null $statistics_count
+ *
+ * @method static Builder<static>|StatisticCategory active()
+ * @method static \Database\Factories\StatisticCategoryFactory factory($count = null, $state = [])
+ * @method static Builder<static>|StatisticCategory newModelQuery()
+ * @method static Builder<static>|StatisticCategory newQuery()
+ * @method static Builder<static>|StatisticCategory query()
+ * @method static Builder<static>|StatisticCategory whereCreatedAt($value)
+ * @method static Builder<static>|StatisticCategory whereId($value)
+ * @method static Builder<static>|StatisticCategory whereIsActive($value)
+ * @method static Builder<static>|StatisticCategory whereName($value)
+ * @method static Builder<static>|StatisticCategory whereSlug($value)
+ * @method static Builder<static>|StatisticCategory whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
+ */
 final class StatisticCategory extends Model
 {
     use HasFactory;

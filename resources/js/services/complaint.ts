@@ -1,5 +1,6 @@
 import type { VisitOptions } from '@inertiajs/core';
 import { router } from '@inertiajs/vue3';
+import { route } from '@/lib/route';
 
 export const ComplaintService = {
     adminIndex(params: Record<string, any> = {}, options?: VisitOptions) {
@@ -23,7 +24,7 @@ export const ComplaintService = {
         router.get(route('complaints.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('complaints.store'), data, options);
     },
     

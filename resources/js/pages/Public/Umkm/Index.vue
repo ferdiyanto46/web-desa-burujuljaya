@@ -13,8 +13,8 @@ import { route } from '@/lib/route';
 
 const props = defineProps<{
     umkms: {
-        data: Array<any>;
-        links: Array<any>;
+        data: any[];
+        links: any[];
         current_page: number;
         last_page: number;
         total: number;

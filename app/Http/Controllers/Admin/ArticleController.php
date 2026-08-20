@@ -7,13 +7,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreArticleRequest;
 use App\Http\Requests\Admin\UpdateArticleRequest;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Services\ArticleService;
-use App\Http\Resources\ArticleResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,7 +29,7 @@ final class ArticleController extends Controller
      */
     public function index(Request $request): Response
     {
-        \Illuminate\Support\Facades\Gate::authorize('viewAny', Article::class);
+        Gate::authorize('viewAny', Article::class);
 
         $query = Article::withDetails()->latest();
 
@@ -36,7 +37,7 @@ final class ArticleController extends Controller
             $search = $request->string('search')->toString();
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('excerpt', 'like', "%{$search}%");
+                    ->orWhere('excerpt', 'like', "%{$search}%");
             });
         }
 
@@ -56,7 +57,7 @@ final class ArticleController extends Controller
      */
     public function create(): Response
     {
-        \Illuminate\Support\Facades\Gate::authorize('create', Article::class);
+        Gate::authorize('create', Article::class);
 
         $categories = ArticleCategory::all();
 
@@ -86,7 +87,7 @@ final class ArticleController extends Controller
      */
     public function show(Article $article): Response
     {
-        \Illuminate\Support\Facades\Gate::authorize('view', $article);
+        Gate::authorize('view', $article);
 
         $article->load(['category', 'author']);
 
@@ -100,7 +101,7 @@ final class ArticleController extends Controller
      */
     public function edit(Article $article): Response
     {
-        \Illuminate\Support\Facades\Gate::authorize('update', $article);
+        Gate::authorize('update', $article);
 
         $categories = ArticleCategory::all();
 
@@ -130,7 +131,7 @@ final class ArticleController extends Controller
      */
     public function destroy(Article $article): RedirectResponse
     {
-        \Illuminate\Support\Facades\Gate::authorize('delete', $article);
+        Gate::authorize('delete', $article);
 
         $this->articleService->delete($article);
 

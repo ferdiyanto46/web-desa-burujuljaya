@@ -7,8 +7,11 @@ const layoutStore = useLayoutStore();
 </script>
 
 <template>
-    <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 shrink-0 h-16 px-4">
-        <Logo :collapsed="layoutStore.desktopSidebarMode === 'collapsed' && !layoutStore.isMobileDrawerOpen" />
+    <div 
+        class="flex items-center border-b border-gray-200 dark:border-gray-800 shrink-0 h-16 transition-all duration-300"
+        :class="layoutStore.desktopSidebarMode === 'collapsed' && !layoutStore.isMobileDrawerOpen ? 'justify-center px-2' : 'justify-between px-4'"
+    >
+        <Logo v-show="!(layoutStore.desktopSidebarMode === 'collapsed' && !layoutStore.isMobileDrawerOpen)" :collapsed="layoutStore.desktopSidebarMode === 'collapsed' && !layoutStore.isMobileDrawerOpen" />
         
         <button
             v-if="!layoutStore.isMobileDrawerOpen"

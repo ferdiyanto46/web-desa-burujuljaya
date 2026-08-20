@@ -15,6 +15,7 @@ final class MediaService
     public function store(UploadedFile $file, string $path = 'uploads', string $disk = 'public'): ?string
     {
         $storedPath = $file->store($path, $disk);
+
         return is_string($storedPath) ? $storedPath : null;
     }
 
@@ -24,6 +25,7 @@ final class MediaService
     public function replace(UploadedFile $newFile, ?string $oldPath, string $path = 'uploads', string $disk = 'public'): ?string
     {
         $this->delete($oldPath, $disk);
+
         return $this->store($newFile, $path, $disk);
     }
 

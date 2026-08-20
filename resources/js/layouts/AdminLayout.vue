@@ -5,8 +5,9 @@ import DashboardContainer from '../components/dashboard/DashboardContainer.vue';
 
 <template>
     <DashboardContainer>
-        <ContentWrapper>
-            <slot />
-        </ContentWrapper>
+        <template #header v-if="$slots.header">
+            <slot name="header" />
+        </template>
+        <slot />
     </DashboardContainer>
 </template>

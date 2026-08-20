@@ -10,7 +10,7 @@ export const UmkmService = {
         router.get(route('admin.umkms.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.umkms.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const UmkmService = {
         router.get(route('admin.umkms.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.put(route('admin.umkms.update', id), data, options);
     },
     

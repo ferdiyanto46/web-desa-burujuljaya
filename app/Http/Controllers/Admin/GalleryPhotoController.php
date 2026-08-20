@@ -1,43 +1,72 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\UploadGalleryPhotoRequest;
-use App\Models\GalleryAlbum;
+use App\Http\Requests\ReorderGalleryPhotoRequest;
+use App\Http\Requests\StoreGalleryPhotoRequest;
+use App\Http\Requests\UpdateGalleryPhotoRequest;
+use App\Models\Gallery;
 use App\Models\GalleryPhoto;
-use App\Services\GalleryService;
+use App\Services\GalleryPhotoService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 
-final class GalleryPhotoController extends Controller
+class GalleryPhotoController extends Controller
 {
     public function __construct(
-        private readonly GalleryService $galleryService
+        private readonly GalleryPhotoService $galleryPhotoService
     ) {}
 
     /**
-     * Store newly uploaded photos to an album.
+     * Store bulk photos for a gallery.
      */
-    public function store(UploadGalleryPhotoRequest $request, GalleryAlbum $album): RedirectResponse
+    public function store(StoreGalleryPhotoRequest $request, Gallery $gallery): RedirectResponse
     {
-        /** @var array<UploadedFile> $photos */
-        $photos = $request->file('photos');
+        // Policy checked via request
+        $this->galleryPhotoService->uploadPhotos(
+            $gallery,
+            $request->file('photos')
+        );
 
-        $this->galleryService->uploadPhotos($album, $photos);
-
-        return redirect()->route('admin.gallery-albums.show', $album)->with('success', 'Foto berhasil diunggah.');
+        return redirect()->back()
+            ->with('success', 'Foto berhasil diunggah.');
     }
 
     /**
-     * Remove the specified photo from the album.
+     * Update metadata for a single photo.
      */
-    public function destroy(GalleryAlbum $album, GalleryPhoto $photo): RedirectResponse
+    public function update(UpdateGalleryPhotoRequest $request, Gallery $gallery, GalleryPhoto $photo): RedirectResponse
     {
-        $this->galleryService->removePhoto($photo);
+        // Policy checked via request
+        $this->galleryPhotoService->updatePhoto($photo, $request->validated());
 
-        return redirect()->route('admin.gallery-albums.show', $album)->with('success', 'Foto berhasil dihapus.');
+        return redirect()->back()
+            ->with('success', 'Data foto berhasil diperbarui.');
+    }
+
+    /**
+     * Reorder photos.
+     */
+    public function reorder(ReorderGalleryPhotoRequest $request, Gallery $gallery): RedirectResponse
+    {
+        // Policy checked via request
+        $this->galleryPhotoService->reorderPhotos($gallery, $request->validated('photos'));
+
+        return redirect()->back()
+            ->with('success', 'Urutan foto berhasil disimpan.');
+    }
+
+    /**
+     * Remove the specified photo from storage.
+     */
+    public function destroy(Gallery $gallery, GalleryPhoto $photo): RedirectResponse
+    {
+        Gate::authorize('delete', $photo);
+
+        $this->galleryPhotoService->deletePhoto($photo);
+
+        return redirect()->back()
+            ->with('success', 'Foto berhasil dihapus.');
     }
 }

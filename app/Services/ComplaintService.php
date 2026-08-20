@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Complaint;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\UploadedFile;
 
@@ -13,6 +14,31 @@ final class ComplaintService
     public function __construct(
         private readonly DatabaseManager $db
     ) {}
+
+    /**
+     * Get paginated complaints for admin panel.
+     *
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Complaint>
+     */
+    public function getAdminPaginated(array $filters = []): LengthAwarePaginator
+    {
+        $query = Complaint::query()->withDetails();
+
+        if (! empty($filters['search'])) {
+            $query->search($filters['search']);
+        }
+
+        if (! empty($filters['category_id'])) {
+            $query->where('category_id', $filters['category_id']);
+        }
+
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        return $query->latest('id')->paginate(15)->withQueryString();
+    }
 
     /**
      * Submit a new complaint.
@@ -24,6 +50,17 @@ final class ComplaintService
     {
         return $this->db->transaction(function () use ($data, $attachments) {
             $complaint = clone new Complaint;
+
+            if (! empty($data['is_anonymous'])) {
+                $data['reporter_name'] = ! empty($data['reporter_name']) ? $data['reporter_name'] : 'Anonim';
+                $data['reporter_phone'] = $data['reporter_phone'] ?? null;
+                $data['reporter_email'] = $data['reporter_email'] ?? null;
+            }
+
+            if (! empty($data['location'])) {
+                $data['body'] = "Lokasi Kejadian: {$data['location']}\n\n{$data['body']}";
+                unset($data['location']);
+            }
 
             $complaint->fill($data);
             $complaint->save();
@@ -42,7 +79,6 @@ final class ComplaintService
                 if (is_string($path)) {
                     $complaint->attachments()->create([
                         'file_path' => $path,
-                        'file_name' => $file->getClientOriginalName(),
                         'file_type' => $file->getMimeType(),
                         'file_size' => $file->getSize(),
                     ]);

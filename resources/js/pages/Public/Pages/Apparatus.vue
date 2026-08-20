@@ -6,7 +6,7 @@ import { Icons } from '@/constants/icons';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 
 defineProps<{
-    apparatuses: Array<any>;
+    apparatuses: any[];
 }>();
 </script>
 

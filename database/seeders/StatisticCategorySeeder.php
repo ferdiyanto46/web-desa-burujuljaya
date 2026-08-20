@@ -25,11 +25,10 @@ final class StatisticCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            StatisticCategory::create([
-                'name' => $category,
-                'slug' => Str::slug($category),
-                'is_active' => true,
-            ]);
+            StatisticCategory::firstOrCreate(
+                ['slug' => Str::slug($category)],
+                ['name' => $category, 'is_active' => true]
+            );
         }
     }
 }

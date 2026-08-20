@@ -41,6 +41,13 @@ import {
     Clock,
     Loader,
     MessageSquare,
+    Briefcase,
+    HelpCircle,
+    Archive,
+    FileArchive,
+    Trash,
+    Route,
+    Save,
 } from 'lucide-vue-next';
 
 export const Icons = {
@@ -86,6 +93,13 @@ export const Icons = {
     ClockIcon: Clock,
     LoaderIcon: Loader,
     MessageSquareIcon: MessageSquare,
+    BriefcaseIcon: Briefcase,
+    HelpCircleIcon: HelpCircle,
+    ArchiveIcon: Archive,
+    FileArchiveIcon: FileArchive,
+    TrashIcon: Trash,
+    RouteIcon: Route,
+    SaveIcon: Save,
 };
 
 export type IconName = keyof typeof Icons;

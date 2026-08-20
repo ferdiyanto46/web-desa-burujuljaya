@@ -4,25 +4,40 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Tourism;
 use App\Models\TourismCategory;
-use App\Models\User;
+use App\Models\TourismFacility;
 use Illuminate\Database\Seeder;
 
-final class TourismSeeder extends Seeder
+class TourismSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $users = User::inRandomOrder()->limit(20)->get();
-        $categories = TourismCategory::all();
+        $categories = [
+            ['name' => 'Wisata Alam', 'description' => 'Destinasi wisata yang menyuguhkan keindahan alam.'],
+            ['name' => 'Wisata Budaya', 'description' => 'Destinasi wisata sejarah, seni, dan tradisi lokal.'],
+            ['name' => 'Wisata Buatan', 'description' => 'Destinasi wisata rekreasi buatan seperti waterpark atau taman bermain.'],
+        ];
 
-        if ($users->isEmpty() || $categories->isEmpty()) {
-            return;
+        foreach ($categories as $cat) {
+            TourismCategory::firstOrCreate(['name' => $cat['name']], $cat);
         }
 
-        Tourism::factory(10)->recycle($users)->recycle($categories)->create();
+        $facilities = [
+            ['name' => 'Area Parkir Luas', 'icon' => 'parking-circle'],
+            ['name' => 'Toilet Bersih', 'icon' => 'bath'],
+            ['name' => 'Mushola', 'icon' => 'book-open'],
+            ['name' => 'Warung Makan', 'icon' => 'coffee'],
+            ['name' => 'Spot Foto', 'icon' => 'camera'],
+            ['name' => 'Gazebo', 'icon' => 'tent'],
+        ];
+
+        foreach ($facilities as $fac) {
+            TourismFacility::firstOrCreate(['name' => $fac['name']], $fac);
+        }
+
+        // We can create dummy tourisms via factory when needed in tests
     }
 }

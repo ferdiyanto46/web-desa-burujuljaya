@@ -32,9 +32,13 @@ class RolePermissionSeeder extends Seeder
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         // Create every permission defined in the permission map
-        foreach ($this->allPermissions() as $permission) {
+        $permissions = array_unique($this->allPermissions());
+        foreach ($permissions as $permission) {
             Permission::findOrCreate($permission);
         }
+
+        // Re-cache permissions before assigning them to roles to avoid Spatie cache issues
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         // Create roles and assign their permission sets
         $this->seedSuperAdminRole();
@@ -136,9 +140,13 @@ class RolePermissionSeeder extends Seeder
             'apparatus.viewAny', 'apparatus.view', 'apparatus.create',
             'apparatus.update', 'apparatus.delete',
 
-            // Gallery & Video
-            'gallery.viewAny', 'gallery.view', 'gallery.create',
-            'gallery.update', 'gallery.delete',
+            // Galleries
+            'galleries.viewAny', 'galleries.view', 'galleries.create',
+            'galleries.update', 'galleries.delete', 'galleries.restore', 'galleries.forceDelete',
+
+            // Gallery Photos
+            'gallery-photos.viewAny', 'gallery-photos.view', 'gallery-photos.create',
+            'gallery-photos.update', 'gallery-photos.delete', 'gallery-photos.restore', 'gallery-photos.forceDelete',
             'videos.viewAny', 'videos.view', 'videos.create',
             'videos.update', 'videos.delete',
 
@@ -166,19 +174,20 @@ class RolePermissionSeeder extends Seeder
         return [
             // Village profile & statistics
             'village-profile.view', 'village-profile.update',
+            'village-pages.viewAny', 'village-pages.view', 'village-pages.create', 'village-pages.update', 'village-pages.delete', 'village-pages.restore', 'village-pages.forceDelete',
+            'village-services.viewAny', 'village-services.view', 'village-services.create', 'village-services.update', 'village-services.delete', 'village-services.restore', 'village-services.forceDelete',
+            'contact-information.viewAny', 'contact-information.view', 'contact-information.create', 'contact-information.update', 'contact-information.delete', 'contact-information.restore', 'contact-information.forceDelete',
             'statistics.viewAny', 'statistics.view', 'statistics.create',
             'statistics.update', 'statistics.delete',
 
-            // Website management
+            // Website management & Complaints
             'banners.viewAny', 'banners.view', 'banners.create', 'banners.update', 'banners.delete',
-            'faqs.viewAny', 'faqs.view', 'faqs.create', 'faqs.update', 'faqs.delete',
+            'faqs.viewAny', 'faqs.view', 'faqs.create', 'faqs.update', 'faqs.delete', 'faqs.restore', 'faqs.forceDelete',
+            'homepage-sections.viewAny', 'homepage-sections.view', 'homepage-sections.create', 'homepage-sections.update', 'homepage-sections.delete',
+            'complaints.viewAny', 'complaints.view', 'complaints.update', 'complaints.delete',
             'contacts.delete',
 
-            // User management (cannot touch super-admin accounts — enforced in UserPolicy)
-            'users.viewAny', 'users.view', 'users.create', 'users.update', 'users.delete',
-
-            // Settings & logs
-            'settings.view', 'settings.update',
+            // Activity Logs (view only)
             'logs.viewAny',
         ];
     }
@@ -192,8 +201,14 @@ class RolePermissionSeeder extends Seeder
     private function superAdminOnlyPermissions(): array
     {
         return [
+            // User management (Exclusive to Super Administrator)
+            'users.viewAny', 'users.view', 'users.create', 'users.update', 'users.delete', 'users.restore', 'users.forceDelete',
+
+            // System Settings & Maintenance (Exclusive to Super Administrator)
+            'settings.view', 'settings.update', 'manage settings',
             'roles.viewAny', 'roles.view', 'roles.create', 'roles.update', 'roles.delete',
-            'backup.create', 'backup.download',
+            'backup.create', 'backup.download', 'manage backups',
+            'cache.clear',
         ];
     }
 

@@ -10,7 +10,7 @@ export const UserService = {
         router.get(route('admin.users.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.users.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const UserService = {
         router.get(route('admin.users.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.put(route('admin.users.update', id), data, options);
     },
     

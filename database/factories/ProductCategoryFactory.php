@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Models\ProductCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @extends Factory<ProductCategory>
@@ -23,6 +24,7 @@ final class ProductCategoryFactory extends Factory
         $name = fake()->unique()->words(2, true);
 
         return [
+            'ulid' => (string) Ulid::generate(),
             'name' => str($name)->title()->toString(),
             'slug' => Str::slug($name),
             'description' => fake()->sentence(),

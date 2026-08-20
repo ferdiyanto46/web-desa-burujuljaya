@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import { DialogRoot, DialogPortal, DialogOverlay, DialogContent } from 'reka-ui';
+import { computed } from 'vue';
 import { ADMIN_NAVIGATION } from '@/constants/navigation';
 import { useLayoutStore } from '@/stores/layoutStore';
 import NavigationDivider from './NavigationDivider.vue';
@@ -8,6 +10,39 @@ import SidebarGroup from './SidebarGroup.vue';
 import SidebarHeader from './SidebarHeader.vue';
 
 const layoutStore = useLayoutStore();
+const page = usePage();
+
+const filteredNavigation = computed(() => {
+    const userRoles: string[] = (page.props.auth as any)?.roles || [];
+    const isSuperAdmin = userRoles.includes('super-admin');
+
+    return ADMIN_NAVIGATION
+        .map(group => {
+            if (group.roles && !group.roles.some(r => userRoles.includes(r)) && !isSuperAdmin) {
+                return null;
+            }
+
+            const filteredItems = group.items.filter(item => {
+                if (item.hidden) {
+                    return false;
+                }
+                if (!item.roles || item.roles.length === 0) {
+                    return true;
+                }
+                return isSuperAdmin || item.roles.some(r => userRoles.includes(r));
+            });
+
+            if (filteredItems.length === 0) {
+                return null;
+            }
+
+            return {
+                ...group,
+                items: filteredItems,
+            };
+        })
+        .filter(Boolean) as typeof ADMIN_NAVIGATION;
+});
 </script>
 
 <template>
@@ -21,12 +56,12 @@ const layoutStore = useLayoutStore();
                 <SidebarHeader />
                 
                 <div class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar py-2">
-                    <template v-for="(group, index) in ADMIN_NAVIGATION" :key="group.label">
+                    <template v-for="(group, index) in filteredNavigation" :key="group.label">
                         <SidebarGroup 
                             :group="group" 
                             :collapsed="false" 
                         />
-                        <NavigationDivider v-if="index < ADMIN_NAVIGATION.length - 1" />
+                        <NavigationDivider v-if="index < filteredNavigation.length - 1" />
                     </template>
                 </div>
                 

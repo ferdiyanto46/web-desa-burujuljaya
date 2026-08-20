@@ -4,58 +4,62 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Enums\PublicationStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UmkmResource;
 use App\Models\Umkm;
 use App\Models\UmkmCategory;
+use App\Services\UmkmService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class UmkmController extends Controller
+class UmkmController extends Controller
 {
-    /**
-     * Display a listing of UMKM.
-     */
+    public function __construct(
+        private readonly UmkmService $umkmService,
+    ) {}
+
     public function index(Request $request): Response
     {
-        $query = Umkm::withDetails()->where('is_active', true)->latest();
-
-        if ($request->has('kategori')) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('slug', $request->string('kategori')->toString());
-            });
+        $categorySlug = $request->string('kategori')->trim()->toString();
+        $categoryId = null;
+        if ($categorySlug !== '' && $categorySlug !== 'all' && $categorySlug !== 'semua') {
+            $category = UmkmCategory::where('slug', $categorySlug)->first();
+            $categoryId = $category?->id;
         }
 
-        if ($request->has('cari')) {
-            $query->where('name', 'like', '%'.$request->string('cari')->toString().'%');
+        $search = $request->string('cari')->trim()->toString();
+        if ($search === '') {
+            $search = $request->string('search')->trim()->toString();
         }
 
-        $umkms = $query->paginate(9)->withQueryString();
-        $categories = UmkmCategory::all();
+        $umkms = $this->umkmService->getPublicPaginated(
+            12,
+            $categoryId,
+            $search
+        );
 
-        return Inertia::render('Public/Umkm/Index', [
-            'umkms' => $umkms,
-            'categories' => $categories,
-            'filters' => $request->only(['kategori', 'cari']),
+        return Inertia::render('Frontend/Umkm/Index', [
+            'umkms' => UmkmResource::collection($umkms),
+            'filters' => [
+                'cari' => $search,
+                'kategori' => $categorySlug,
+            ],
+            'categories' => UmkmCategory::all(),
         ]);
     }
 
-    /**
-     * Display the specified UMKM and its products.
-     */
-    public function show(string $slug): Response
+    public function show(Umkm $umkm): Response
     {
-        $umkm = Umkm::withDetails()
-            ->where('is_active', true)
-            ->where('slug', $slug)
-            ->firstOrFail();
+        if ($umkm->status !== PublicationStatus::Published && ! auth()->check()) {
+            abort(404);
+        }
 
-        $umkm->load(['products' => function ($query) {
-            $query->where('is_active', true)->latest();
-        }]);
+        $this->umkmService->incrementViewCount($umkm);
 
-        return Inertia::render('Public/Umkm/Show', [
-            'umkm' => $umkm,
+        return Inertia::render('Frontend/Umkm/Show', [
+            'umkm' => new UmkmResource($umkm->load(['category', 'photos'])),
         ]);
     }
 }

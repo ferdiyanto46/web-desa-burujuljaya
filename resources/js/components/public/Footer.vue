@@ -1,7 +1,18 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { Icons } from '@/constants/icons';
 import FooterLinks from './FooterLinks.vue';
 import SocialLinks from './SocialLinks.vue';
+
+const page = usePage();
+const village = computed(() => (page.props as any).village);
+const logoUrl = computed(() => village.value?.logo_url || null);
+const villageName = computed(() => village.value?.name || 'Desa Burujuljaya');
+const regency = computed(() => village.value?.regency ? `Kabupaten ${village.value.regency}` : 'Kabupaten Tasikmalaya');
+const address = computed(() => village.value?.address || 'Jl. Raya Burujuljaya No. 123, Kec. Parungponteng, Kab. Tasikmalaya, Jawa Barat 46181');
+const phone = computed(() => village.value?.phone || '+62 858-421-14748');
+const email = computed(() => village.value?.email || 'desa.burujuljaya@gmail.com');
 </script>
 
 <template>
@@ -11,25 +22,32 @@ import SocialLinks from './SocialLinks.vue';
                 <!-- Brand & Address -->
                 <div class="xl:col-span-1 flex flex-col gap-6">
                     <div class="flex items-center gap-3">
-                        <img class="h-10 w-auto grayscale dark:invert opacity-70 hover:grayscale-0 hover:opacity-100 transition-all" src="/images/logo-majalengka.png" alt="Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNjY2MiLz48L3N2Zz4='" />
+                        <img 
+                            v-if="logoUrl" 
+                            class="h-12 w-auto max-w-[56px] object-contain transition-all" 
+                            :src="logoUrl" 
+                            :alt="villageName" 
+                        />
+                        <div v-else class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-xl shadow-sm">
+                            {{ villageName.charAt(0) || 'D' }}
+                        </div>
                         <div>
-                            <span class="block text-xl font-bold text-gray-900 dark:text-white leading-tight">Desa Burujuljaya</span>
-                            <span class="block text-sm text-gray-500 dark:text-gray-400">Kabupaten Majalengka</span>
+                            <span class="block text-xl font-bold text-gray-900 dark:text-white leading-tight">{{ villageName }}</span>
+                            <span class="block text-sm text-gray-500 dark:text-gray-400">{{ regency }}</span>
                         </div>
                     </div>
                     
                     <div class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-sm">
-                        <p class="mb-2">
-                            Jl. Raya Burujuljaya No. 123, Kec. Parungponteng,<br>
-                            Kab. Majalengka, Jawa Barat 45465
+                        <p class="mb-2 whitespace-pre-line">
+                            {{ address }}
                         </p>
-                        <p class="flex items-center gap-2 mt-4">
-                            <component :is="Icons.MenuIcon" class="w-4 h-4" /> 
-                            +62 812-3456-7890
+                        <p v-if="phone" class="flex items-center gap-2 mt-4 text-gray-600 dark:text-gray-300">
+                            <component :is="Icons.PhoneIcon" class="w-4 h-4 text-emerald-600" /> 
+                            {{ phone }}
                         </p>
-                        <p class="flex items-center gap-2 mt-2">
-                            <component :is="Icons.FileTextIcon" class="w-4 h-4" /> 
-                            desa.burujuljaya@gmail.com
+                        <p v-if="email" class="flex items-center gap-2 mt-2 text-gray-600 dark:text-gray-300">
+                            <component :is="Icons.FileTextIcon" class="w-4 h-4 text-emerald-600" /> 
+                            {{ email }}
                         </p>
                     </div>
                     
@@ -44,7 +62,7 @@ import SocialLinks from './SocialLinks.vue';
             
             <div class="mt-12 border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-base text-gray-400 xl:text-center">
-                    &copy; {{ new Date().getFullYear() }} Pemerintah Desa Burujuljaya. Hak cipta dilindungi undang-undang.
+                    &copy; {{ new Date().getFullYear() }} Pemerintah {{ villageName }}. Hak cipta dilindungi undang-undang.
                 </p>
                 <div class="text-sm text-gray-400">
                     Sistem Informasi Desa (SID)

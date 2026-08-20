@@ -1,112 +1,154 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Services;
 
-use App\Models\GalleryAlbum;
-use App\Models\GalleryPhoto;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Http\UploadedFile;
+use App\Enums\PublicationStatus;
+use App\Models\Gallery;
+use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
-final class GalleryService
+class GalleryService
 {
     public function __construct(
-        private readonly DatabaseManager $db
+        private readonly MediaService $mediaService
     ) {}
 
     /**
-     * Create a new gallery album.
-     *
-     * @param  array<string, mixed>  $data
+     * Get paginated galleries for admin with filters.
      */
-    public function createAlbum(array $data, ?UploadedFile $cover = null): GalleryAlbum
+    public function getAdminPaginated(array $filters = [], int $perPage = 10): LengthAwarePaginator
     {
-        return $this->db->transaction(function () use ($data, $cover) {
-            $album = clone new GalleryAlbum;
+        $query = Gallery::query()
+            ->with(['author'])
+            ->withCount('photos');
 
-            if ($cover) {
-                $path = $cover->store('gallery/covers', 'public');
-                if (is_string($path)) {
-                    $data['cover_photo'] = $path;
-                }
+        if (! empty($filters['search'])) {
+            $query->where('title', 'like', '%'.$filters['search'].'%');
+        }
+
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (isset($filters['is_pinned']) && $filters['is_pinned'] !== '') {
+            $query->where('is_pinned', filter_var($filters['is_pinned'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        return $query->latest()->paginate($perPage);
+    }
+
+    /**
+     * Get paginated galleries for public view.
+     */
+    public function getPublicPaginated(int $perPage = 12): LengthAwarePaginator
+    {
+        return Gallery::query()
+            ->where('status', PublicationStatus::Published)
+            ->withCount('photos')
+            ->orderByDesc('is_pinned')
+            ->orderByDesc('published_at')
+            ->paginate($perPage);
+    }
+
+    /**
+     * Create a new gallery.
+     */
+    public function createGallery(array $data, User $author): Gallery
+    {
+        return DB::transaction(function () use ($data, $author) {
+            $gallery = new Gallery;
+            $gallery->fill($data);
+            $gallery->user_id = $author->id;
+
+            // Set published_at if status is published
+            if ($gallery->status === PublicationStatus::Published) {
+                $gallery->published_at = now();
             }
 
-            $album->fill($data);
-            $album->save();
+            // Handle featured image upload
+            if (isset($data['featured_image'])) {
+                $gallery->featured_image_path = $this->mediaService->store(
+                    $data['featured_image'],
+                    'galleries'
+                );
+            }
 
-            return $album;
+            $gallery->save();
+
+            return $gallery;
         });
     }
 
     /**
-     * Update an existing gallery album.
-     *
-     * @param  array<string, mixed>  $data
+     * Update an existing gallery.
      */
-    public function updateAlbum(GalleryAlbum $album, array $data, ?UploadedFile $cover = null): GalleryAlbum
+    public function updateGallery(Gallery $gallery, array $data): Gallery
     {
-        return $this->db->transaction(function () use ($album, $data, $cover) {
-            if ($cover) {
-                $path = $cover->store('gallery/covers', 'public');
-                if (is_string($path)) {
-                    $data['cover_photo'] = $path;
+        return DB::transaction(function () use ($gallery, $data) {
+            // Handle status change to published
+            if (isset($data['status']) && $data['status'] !== $gallery->status->value) {
+                if ($data['status'] === PublicationStatus::Published->value) {
+                    $gallery->published_at = $gallery->published_at ?? now();
                 }
             }
 
-            $album->fill($data);
-            $album->save();
+            $gallery->fill($data);
 
-            return $album;
+            // Handle featured image update
+            if (isset($data['featured_image'])) {
+                if ($gallery->featured_image_path) {
+                    $this->mediaService->delete($gallery->featured_image_path);
+                }
+
+                $gallery->featured_image_path = $this->mediaService->store(
+                    $data['featured_image'],
+                    'galleries'
+                );
+            }
+
+            $gallery->save();
+
+            return $gallery;
         });
     }
 
     /**
-     * Delete an album.
+     * Soft delete a gallery.
      */
-    public function deleteAlbum(GalleryAlbum $album): void
+    public function deleteGallery(Gallery $gallery): void
     {
-        $album->delete();
+        $gallery->delete(); // Soft delete, media kept
     }
 
     /**
-     * Upload photos to an album.
-     *
-     * @param  array<UploadedFile>  $photos
-     * @return array<int, GalleryPhoto>
+     * Restore a soft-deleted gallery.
      */
-    public function uploadPhotos(GalleryAlbum $album, array $photos): array
+    public function restoreGallery(Gallery $gallery): void
     {
-        return $this->db->transaction(function () use ($album, $photos) {
-            /** @var array<int, GalleryPhoto> $uploadedPhotos */
-            $uploadedPhotos = [];
-            $maxOrder = $album->photos()->max('order') ?? 0;
+        $gallery->restore();
+    }
 
+    /**
+     * Permanently delete a gallery and all its media.
+     */
+    public function forceDeleteGallery(Gallery $gallery): void
+    {
+        DB::transaction(function () use ($gallery) {
+            if ($gallery->featured_image_path) {
+                $this->mediaService->delete($gallery->featured_image_path);
+            }
+
+            // Note: Photos will be force deleted by observers or we need to explicitly force delete them.
+            // Since we use restricted foreign key, we must delete photos first.
+            $photos = $gallery->photos()->withTrashed()->get();
             foreach ($photos as $photo) {
-                $path = $photo->store('gallery/photos', 'public');
-
-                if (is_string($path)) {
-                    $maxOrder++;
-                    /** @var GalleryPhoto $newPhoto */
-                    $newPhoto = $album->photos()->create([
-                        'title' => $photo->getClientOriginalName(),
-                        'photo_path' => $path,
-                        'size' => $photo->getSize(),
-                        'order' => $maxOrder,
-                    ]);
-                    $uploadedPhotos[] = $newPhoto;
-                }
+                // Delete actual photo files
+                $this->mediaService->delete($photo->image_path);
+                $photo->forceDelete();
             }
 
-            return $uploadedPhotos;
+            $gallery->forceDelete();
         });
-    }
-
-    /**
-     * Remove a photo from an album.
-     */
-    public function removePhoto(GalleryPhoto $photo): void
-    {
-        $photo->delete();
     }
 }

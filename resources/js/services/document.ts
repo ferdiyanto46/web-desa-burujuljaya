@@ -10,7 +10,7 @@ export const DocumentService = {
         router.get(route('admin.documents.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.documents.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const DocumentService = {
         router.get(route('admin.documents.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.post(route('admin.documents.update', id), {
             _method: 'PUT',
             ...data
@@ -27,6 +27,14 @@ export const DocumentService = {
     
     destroy(id: string, options?: VisitOptions) {
         router.delete(route('admin.documents.destroy', id), options);
+    },
+    
+    restore(id: string, options?: VisitOptions) {
+        router.post(route('admin.documents.restore', id), {}, options);
+    },
+    
+    forceDelete(id: string, options?: VisitOptions) {
+        router.delete(route('admin.documents.force-delete', id), options);
     },
     
     publicIndex(params: Record<string, any> = {}, options?: VisitOptions) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Observers\ArticleObserver;
 use App\Traits\HasUlid;
 use App\Traits\HasUniqueSlug;
@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $excerpt
  * @property string $content IMPORTANT: Raw HTML. Must be sanitized via HTML Purifier at the Service Layer.
  * @property string|null $featured_image_path
- * @property ArticleStatus $status
+ * @property PublicationStatus $status
  * @property bool $is_featured
  * @property int $views Note: Increment via Queue to avoid blocking main thread.
  * @property Carbon|null $published_at
@@ -40,6 +40,44 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property CarbonImmutable|null $deleted_at
+ * @property-read User|null $author
+ * @property-read ArticleCategory|null $category
+ *
+ * @method static Builder<static>|Article ofCategory(string|int $category)
+ * @method static Builder<static>|Article draft()
+ * @method static \Database\Factories\ArticleFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Article featured()
+ * @method static Builder<static>|Article latestPublished()
+ * @method static Builder<static>|Article newModelQuery()
+ * @method static Builder<static>|Article newQuery()
+ * @method static Builder<static>|Article onlyTrashed()
+ * @method static Builder<static>|Article published()
+ * @method static Builder<static>|Article query()
+ * @method static Builder<static>|Article search(string $keyword)
+ * @method static Builder<static>|Article whereCategoryId($value)
+ * @method static Builder<static>|Article whereContent($value)
+ * @method static Builder<static>|Article whereCreatedAt($value)
+ * @method static Builder<static>|Article whereDeletedAt($value)
+ * @method static Builder<static>|Article whereExcerpt($value)
+ * @method static Builder<static>|Article whereFeaturedImagePath($value)
+ * @method static Builder<static>|Article whereId($value)
+ * @method static Builder<static>|Article whereIsFeatured($value)
+ * @method static Builder<static>|Article whereMetaDescription($value)
+ * @method static Builder<static>|Article whereMetaTitle($value)
+ * @method static Builder<static>|Article whereOgImagePath($value)
+ * @method static Builder<static>|Article wherePublishedAt($value)
+ * @method static Builder<static>|Article whereSlug($value)
+ * @method static Builder<static>|Article whereStatus($value)
+ * @method static Builder<static>|Article whereTitle($value)
+ * @method static Builder<static>|Article whereUlid($value)
+ * @method static Builder<static>|Article whereUpdatedAt($value)
+ * @method static Builder<static>|Article whereUserId($value)
+ * @method static Builder<static>|Article whereViews($value)
+ * @method static Builder<static>|Article withDetails()
+ * @method static Builder<static>|Article withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Article withoutTrashed()
+ *
+ * @mixin \Eloquent
  */
 #[ObservedBy(ArticleObserver::class)]
 final class Article extends Model
@@ -76,11 +114,43 @@ final class Article extends Model
     protected function casts(): array
     {
         return [
-            'status' => ArticleStatus::class,
+            'status' => PublicationStatus::class,
             'is_featured' => 'boolean',
             'views' => 'integer',
             'published_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @var list<string>
+     */
+    protected $appends = [
+        'cover_image_url',
+        'featured_image_url',
+    ];
+
+    /**
+     * Get the public URL for the featured image / cover image.
+     */
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        if (empty($this->featured_image_path)) {
+            return null;
+        }
+
+        if (str_starts_with($this->featured_image_path, 'http://') || str_starts_with($this->featured_image_path, 'https://')) {
+            return $this->featured_image_path;
+        }
+
+        return '/storage/'.ltrim($this->featured_image_path, '/');
+    }
+
+    /**
+     * Alias for cover_image_url.
+     */
+    public function getFeaturedImageUrlAttribute(): ?string
+    {
+        return $this->getCoverImageUrlAttribute();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -138,8 +208,11 @@ final class Article extends Model
      */
     public function scopePublished(Builder $query): Builder
     {
-        return $query->where('status', ArticleStatus::Published)
-            ->where('published_at', '<=', now());
+        return $query->where('status', PublicationStatus::Published)
+            ->where(function (Builder $q) {
+                $q->whereNull('published_at')
+                    ->orWhere('published_at', '<=', now());
+            });
     }
 
     /**
@@ -150,7 +223,7 @@ final class Article extends Model
      */
     public function scopeDraft(Builder $query): Builder
     {
-        return $query->where('status', ArticleStatus::Draft);
+        return $query->where('status', PublicationStatus::Draft);
     }
 
     /**
@@ -170,7 +243,7 @@ final class Article extends Model
      * @param  Builder<Article>  $query
      * @return Builder<Article>
      */
-    public function scopeCategory(Builder $query, int|string $category): Builder
+    public function scopeOfCategory(Builder $query, int|string $category): Builder
     {
         if (is_numeric($category)) {
             return $query->where('category_id', $category);
@@ -191,7 +264,11 @@ final class Article extends Model
      */
     public function scopeSearch(Builder $query, string $keyword): Builder
     {
-        return $query->whereFullText(['title', 'excerpt', 'content'], $keyword);
+        return $query->where(function (Builder $q) use ($keyword) {
+            $q->where('title', 'like', "%{$keyword}%")
+                ->orWhere('excerpt', 'like', "%{$keyword}%")
+                ->orWhere('content', 'like', "%{$keyword}%");
+        });
     }
 
     /**

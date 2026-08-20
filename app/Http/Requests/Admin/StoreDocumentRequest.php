@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\PublicationStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-final class StoreDocumentRequest extends FormRequest
+class StoreDocumentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +27,18 @@ final class StoreDocumentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => ['required', 'exists:document_categories,id'],
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'file' => ['required', 'file', 'max:10240'],
-            'is_public' => ['nullable', 'boolean'],
+            'category_id' => ['required', 'exists:document_categories,id'],
+            'status' => ['required', Rule::enum(PublicationStatus::class)],
+            'published_at' => ['nullable', 'date'],
+            'is_pinned' => ['required', 'boolean'],
+            'file' => [
+                'required',
+                'file',
+                'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip',
+                'max:10240', // 10MB
+            ],
+            'description' => ['nullable', 'string'],
         ];
     }
 }

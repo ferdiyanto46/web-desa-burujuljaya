@@ -27,7 +27,7 @@ export function useDebounce<T>(value: T, delay = 300) {
 /**
  * A simple debounce function for callbacks
  */
-export function debounce<T extends (...args: any[]) => any>(fn: T, delay = 300) {
+export function debounce<T extends (...args: unknown[]) => unknown>(fn: T, delay = 300) {
     let timeoutId: ReturnType<typeof setTimeout>;
     
     return function (...args: Parameters<T>) {

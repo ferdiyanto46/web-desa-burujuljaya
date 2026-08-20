@@ -6,12 +6,11 @@ namespace Database\Factories;
 
 use App\Models\TourismCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<TourismCategory>
  */
-final class TourismCategoryFactory extends Factory
+class TourismCategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,12 +19,11 @@ final class TourismCategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->words(2, true);
+        $name = $this->faker->unique()->words(2, true);
 
         return [
-            'name' => str($name)->title()->toString(),
-            'slug' => Str::slug($name),
-            'description' => fake()->sentence(),
+            'name' => ucwords($name),
+            'description' => $this->faker->sentence(),
         ];
     }
 }

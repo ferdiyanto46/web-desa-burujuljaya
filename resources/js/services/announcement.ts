@@ -1,36 +1,37 @@
-import type { VisitOptions } from '@inertiajs/core';
-import { router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3'
 
-export const AnnouncementService = {
-    adminIndex(params: Record<string, any> = {}, options?: VisitOptions) {
-        router.get(route('admin.announcements.index'), params, options);
-    },
-    
-    create() {
-        router.get(route('admin.announcements.create'));
-    },
-    
-    store(data: any, options?: VisitOptions) {
-        router.post(route('admin.announcements.store'), data, options);
-    },
-    
-    edit(id: string) {
-        router.get(route('admin.announcements.edit', id));
-    },
-    
-    update(id: string, data: any, options?: VisitOptions) {
-        router.put(route('admin.announcements.update', id), data, options);
-    },
-    
-    destroy(id: string, options?: VisitOptions) {
-        router.delete(route('admin.announcements.destroy', id), options);
-    },
-    
-    publicIndex(params: Record<string, any> = {}, options?: VisitOptions) {
-        router.get(route('announcements.index'), params, options);
-    },
-    
-    publicShow(slug: string) {
-        router.get(route('announcements.show', slug));
-    }
-};
+export function storeAnnouncement<T extends Record<string, any>>(
+    data: T,
+    options = {}
+): void {
+    router.post(route('admin.announcements.store'), data, {
+        preserveScroll: true,
+        ...options,
+    })
+}
+
+export function updateAnnouncement<T extends Record<string, any>>(
+    id: string,
+    data: T,
+    options = {}
+): void {
+    // We must use POST with _method=PUT to support file uploads in Inertia
+    router.post(
+        route('admin.announcements.update', id),
+        {
+            _method: 'put',
+            ...data,
+        },
+        {
+            preserveScroll: true,
+            ...options,
+        }
+    )
+}
+
+export function deleteAnnouncement(id: string, options = {}): void {
+    router.delete(route('admin.announcements.destroy', id), {
+        preserveScroll: true,
+        ...options,
+    })
+}

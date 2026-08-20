@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\User;
@@ -8,10 +8,11 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
     // Setup Super Admin role and permissions
-    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+    app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
     Permission::firstOrCreate(['name' => 'view any articles']);
     Permission::firstOrCreate(['name' => 'view articles']);
@@ -45,8 +46,8 @@ it('can render article index page for authorized users', function () {
 });
 
 it('can filter and search articles', function () {
-    Article::factory()->create(['title' => 'Laravel News', 'status' => ArticleStatus::Published]);
-    Article::factory()->create(['title' => 'Vue Updates', 'status' => ArticleStatus::Draft]);
+    Article::factory()->create(['title' => 'Laravel News', 'status' => PublicationStatus::Published]);
+    Article::factory()->create(['title' => 'Vue Updates', 'status' => PublicationStatus::Draft]);
 
     // Search
     $this->actingAs($this->admin)
@@ -130,7 +131,7 @@ it('can update an existing article and replace the image', function () {
     ]);
 
     $article->refresh();
-    
+
     // Old image should be deleted
     Storage::disk('public')->assertMissing('articles/old.jpg');
     // New image should exist

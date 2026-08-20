@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Agenda;
 use Inertia\Inertia;
@@ -35,7 +35,7 @@ final class AgendaController extends Controller
         // so we just check if it's published.
         $agenda = Agenda::withDetails()
             ->where('slug', $slug)
-            ->where('status', ArticleStatus::Published)
+            ->where('status', PublicationStatus::Published)
             ->firstOrFail();
 
         return Inertia::render('Public/Agendas/Show', [

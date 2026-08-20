@@ -6,7 +6,6 @@ namespace App\Observers;
 
 use App\Models\Article;
 use App\Services\ActivityLogService;
-use Illuminate\Support\Facades\Storage;
 
 final class ArticleObserver
 {

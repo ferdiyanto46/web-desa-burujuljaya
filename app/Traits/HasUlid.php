@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 trait HasUlid
@@ -13,7 +14,7 @@ trait HasUlid
      */
     protected static function bootHasUlid(): void
     {
-        static::creating(static function (self $model): void {
+        static::creating(static function (Model $model): void {
             if (empty($model->ulid)) {
                 $model->ulid = (string) Str::ulid();
             }

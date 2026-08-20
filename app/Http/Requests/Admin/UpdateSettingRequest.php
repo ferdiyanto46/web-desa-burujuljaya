@@ -14,7 +14,7 @@ final class UpdateSettingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('manage settings') ?? false;
+        return $this->user()?->hasAnyRole(['super-admin', 'admin-desa']) || ($this->user()?->can('manage settings') ?? false);
     }
 
     /**
@@ -27,6 +27,8 @@ final class UpdateSettingRequest extends FormRequest
         return [
             'settings' => ['required', 'array'],
             'settings.*' => ['nullable'],
+            'banner_files' => ['nullable', 'array'],
+            'banner_files.*' => ['nullable', 'image', 'max:5120'],
         ];
     }
 }

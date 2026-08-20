@@ -23,10 +23,10 @@ final class TourismCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            TourismCategory::create([
-                'name' => $category,
-                'slug' => Str::slug($category),
-            ]);
+            TourismCategory::firstOrCreate(
+                ['slug' => Str::slug($category)],
+                ['name' => $category]
+            );
         }
     }
 }

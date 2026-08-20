@@ -10,7 +10,7 @@ export const GalleryService = {
         router.get(route('admin.galleries.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.galleries.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const GalleryService = {
         router.get(route('admin.galleries.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.put(route('admin.galleries.update', id), data, options);
     },
     
@@ -27,7 +27,7 @@ export const GalleryService = {
     },
     
     // Photos
-    storePhoto(albumId: string, data: any, options?: VisitOptions) {
+    storePhoto<T extends Record<string, any>>(albumId: string, data: T, options?: VisitOptions) {
         router.post(route('admin.galleries.photos.store', albumId), data, options);
     },
     

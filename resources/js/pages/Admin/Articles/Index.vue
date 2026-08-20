@@ -44,9 +44,12 @@ const columns = [
     { key: 'published_at', label: 'Tanggal Publikasi', sortable: true, align: 'right' as const },
 ];
 
-const destroy = (id: number) => {
+const destroy = (item: Article | any) => {
+    const key = item.ulid || item.id;
     if (confirm('Apakah Anda yakin ingin menghapus artikel ini?')) {
-        router.delete(route('admin.articles.destroy', { article: id }));
+        router.delete(route('admin.articles.destroy', { article: key }), {
+            preserveScroll: true,
+        });
     }
 };
 
@@ -127,16 +130,16 @@ const getStatusColor = (status: string) => {
                 <template #actions="{ item }">
                     <div class="flex items-center justify-end space-x-2">
                         <button
-                            @click="router.visit(route('admin.articles.edit', { article: item.id }))"
-                            class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1"
-                            title="Edit"
+                            @click="router.visit(route('admin.articles.edit', { article: item.ulid || item.id }))"
+                            class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                            title="Edit Artikel"
                         >
                             <EditIcon class="h-4 w-4" />
                         </button>
                         <button
-                            @click="destroy(item.id)"
-                            class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1"
-                            title="Hapus"
+                            @click="destroy(item)"
+                            class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                            title="Hapus Artikel"
                         >
                             <TrashIcon class="h-4 w-4" />
                         </button>

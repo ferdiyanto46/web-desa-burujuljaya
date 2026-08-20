@@ -6,21 +6,36 @@ namespace App\Models;
 
 use App\Observers\ComplaintAttachmentObserver;
 use App\Traits\HasUlid;
+use Database\Factories\ComplaintAttachmentFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $ulid
+ * @property int $complaint_id
+ * @property string $file_path
+ * @property string $file_name
+ * @property string $file_type
+ * @property int $file_size
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 #[ObservedBy(ComplaintAttachmentObserver::class)]
 final class ComplaintAttachment extends Model
 {
+    /** @use HasFactory<ComplaintAttachmentFactory> */
     use HasFactory;
+
     use HasUlid;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'complaint_id',
@@ -39,6 +54,22 @@ final class ComplaintAttachment extends Model
         return [
             'file_size' => 'integer',
         ];
+    }
+
+    /**
+     * Get the file name from path.
+     */
+    public function getFileNameAttribute(): string
+    {
+        return basename($this->file_path);
+    }
+
+    /**
+     * Get the public URL of the attachment.
+     */
+    public function getFileUrlAttribute(): string
+    {
+        return asset('storage/'.$this->file_path);
     }
 
     /**

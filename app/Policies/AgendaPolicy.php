@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Agenda;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class AgendaPolicy
 {
@@ -13,7 +12,7 @@ class AgendaPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view any agendas');
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('agendas.viewAny') || $user->can('view any agendas');
     }
 
     /**
@@ -21,7 +20,7 @@ class AgendaPolicy
      */
     public function view(User $user, Agenda $agenda): bool
     {
-        return $user->can('view agendas');
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('agendas.view') || $user->can('view agendas');
     }
 
     /**
@@ -29,7 +28,7 @@ class AgendaPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create agendas');
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('agendas.create') || $user->can('create agendas');
     }
 
     /**
@@ -37,7 +36,7 @@ class AgendaPolicy
      */
     public function update(User $user, Agenda $agenda): bool
     {
-        return $user->can('update agendas') || $user->id === $agenda->user_id;
+        return $user->hasRole(['admin-desa', 'editor-berita', 'operator']) || $user->can('agendas.update') || $user->can('update agendas') || $user->id === $agenda->user_id;
     }
 
     /**
@@ -45,7 +44,7 @@ class AgendaPolicy
      */
     public function delete(User $user, Agenda $agenda): bool
     {
-        return $user->can('delete agendas');
+        return $user->hasRole(['admin-desa', 'editor-berita']) || $user->can('agendas.delete') || $user->can('delete agendas');
     }
 
     /**
@@ -53,7 +52,7 @@ class AgendaPolicy
      */
     public function restore(User $user, Agenda $agenda): bool
     {
-        return $user->can('restore agendas');
+        return $user->hasRole(['admin-desa', 'editor-berita']) || $user->can('agendas.restore') || $user->can('restore agendas');
     }
 
     /**
@@ -61,6 +60,6 @@ class AgendaPolicy
      */
     public function forceDelete(User $user, Agenda $agenda): bool
     {
-        return $user->can('force delete agendas');
+        return $user->hasRole('admin-desa') || $user->can('agendas.forceDelete') || $user->can('force delete agendas');
     }
 }

@@ -27,7 +27,6 @@ final class AnnouncementSeeder extends Seeder
             ->count(3)
             ->published()
             ->pinned()
-            ->withEndDate()
             ->create(['user_id' => $author->id]);
 
         // 5 active standard announcements (no end date)
@@ -36,11 +35,10 @@ final class AnnouncementSeeder extends Seeder
             ->published()
             ->create(['user_id' => $author->id]);
 
-        // 2 expired announcements
+        // 2 archived announcements
         Announcement::factory()
             ->count(2)
-            ->published()
-            ->expired()
+            ->archived()
             ->create(['user_id' => $author->id]);
 
         // 2 drafts

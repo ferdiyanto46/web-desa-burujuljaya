@@ -1,3 +1,4 @@
+import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { createPinia } from 'pinia';
 import { createApp, h } from 'vue';
@@ -22,10 +23,14 @@ createInertiaApp({
                 return null;
             case name.startsWith('Public/'):
                 return null;
+            case name.startsWith('Frontend/'):
+                return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
+            case name.startsWith('Admin/'):
+                return null; // Admin pages use DashboardContainer or AdminLayout directly in their template
             default:
                 return AppLayout;
         }
@@ -34,13 +39,16 @@ createInertiaApp({
         color: '#4B5563',
     },
     setup({ el, App, props, plugin }) {
+        const vueApp = createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .use(createPinia())
+            .mixin({ methods: { route } });
+            
         if (el) {
-            createApp({ render: () => h(App, props) })
-                .use(plugin)
-                .use(createPinia())
-                .mixin({ methods: { route } })
-                .mount(el);
+            vueApp.mount(el);
         }
+        
+        return vueApp;
     },
 });
 

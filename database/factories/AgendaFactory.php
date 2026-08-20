@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Models\Agenda;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -42,7 +42,7 @@ final class AgendaFactory extends Factory
             'featured_image_path' => null,
             'start_datetime' => $start,
             'end_datetime' => $end,
-            'status' => ArticleStatus::Draft,
+            'status' => PublicationStatus::Draft,
             'is_cancelled' => false,
             'published_at' => null,
         ];
@@ -54,7 +54,7 @@ final class AgendaFactory extends Factory
     public function published(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Published,
+            'status' => PublicationStatus::Published,
             'published_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
         ]);
     }
@@ -68,7 +68,7 @@ final class AgendaFactory extends Factory
         $end = (clone $start)->addHours(4);
 
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Published,
+            'status' => PublicationStatus::Published,
             'start_datetime' => $start,
             'end_datetime' => $end,
             'published_at' => now()->subDays(2),
@@ -84,7 +84,7 @@ final class AgendaFactory extends Factory
         $end = (clone $start)->addHours(4);
 
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Published,
+            'status' => PublicationStatus::Published,
             'start_datetime' => $start,
             'end_datetime' => $end,
             'published_at' => (clone $start)->subWeeks(2),

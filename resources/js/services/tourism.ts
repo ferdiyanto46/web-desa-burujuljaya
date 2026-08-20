@@ -10,7 +10,7 @@ export const TourismService = {
         router.get(route('admin.tourisms.create'));
     },
     
-    store(data: any, options?: VisitOptions) {
+    store<T extends Record<string, any>>(data: T, options?: VisitOptions) {
         router.post(route('admin.tourisms.store'), data, options);
     },
     
@@ -18,7 +18,7 @@ export const TourismService = {
         router.get(route('admin.tourisms.edit', id));
     },
     
-    update(id: string, data: any, options?: VisitOptions) {
+    update<T extends Record<string, any>>(id: string, data: T, options?: VisitOptions) {
         router.post(route('admin.tourisms.update', id), {
             _method: 'PUT',
             ...data

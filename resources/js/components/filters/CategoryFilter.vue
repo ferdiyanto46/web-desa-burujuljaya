@@ -19,9 +19,10 @@ const emit = defineEmits<{
 }>();
 
 const options = computed(() => {
+    const list = Array.isArray(props.categories) ? props.categories : ((props.categories as any)?.data ?? []);
     return [
         { label: 'Semua Kategori', value: '' },
-        ...props.categories.map(c => ({ label: c.name, value: c.id.toString() }))
+        ...list.map((c: any) => ({ label: c.name, value: c.id.toString() }))
     ];
 });
 

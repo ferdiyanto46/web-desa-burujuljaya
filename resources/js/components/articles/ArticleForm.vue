@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { SaveIcon, XIcon } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { Article, ArticleCategory } from '@/types';
 import FormDatePicker from '../forms/FormDatePicker.vue';
 import FormInput from '../forms/FormInput.vue';
@@ -24,6 +24,36 @@ const props = withDefaults(defineProps<Props>(), {
     isEdit: false,
 });
 
+const formatNowLocal = (): string => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+const getInitialPublishedAt = (): string => {
+    if (props.article?.published_at) {
+        try {
+            const date = new Date(props.article.published_at);
+            if (!isNaN(date.getTime())) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+        } catch {
+            // fallback
+        }
+        return props.article.published_at.slice(0, 16).replace(' ', 'T');
+    }
+    return formatNowLocal();
+};
+
 const form = useForm({
     title: props.article?.title || '',
     category_id: props.article?.category_id?.toString() || '',
@@ -32,7 +62,7 @@ const form = useForm({
     featured_image: null as File | null,
     status: props.article?.status || 'draft',
     is_featured: props.article?.is_featured || false,
-    published_at: props.article?.published_at || '',
+    published_at: getInitialPublishedAt(),
     meta_title: props.article?.meta_title || '',
     meta_description: props.article?.meta_description || '',
     // Inertia needs _method for PUT requests with files
@@ -40,9 +70,9 @@ const form = useForm({
 });
 
 const statusOptions = [
-    { label: 'Draft', value: 'draft' },
-    { label: 'Published', value: 'published' },
-    { label: 'Archived', value: 'archived' },
+    { label: 'Draft (Konsep)', value: 'draft' },
+    { label: 'Published (Terbit)', value: 'published' },
+    { label: 'Archived (Arsip)', value: 'archived' },
 ];
 
 const categoryOptions = computed(() => {
@@ -52,16 +82,27 @@ const categoryOptions = computed(() => {
     }));
 });
 
-const submit = () => {
-    if (props.isEdit) {
-        form.post(props.submitRoute, {
-            preserveScroll: true,
-        });
-    } else {
-        form.post(props.submitRoute, {
-            preserveScroll: true,
-        });
+const clientImageError = ref<string | null>(null);
+
+// Automatically set published_at when status is switched to published
+watch(() => form.status, (newStatus) => {
+    if (newStatus === 'published' && !form.published_at) {
+        form.published_at = formatNowLocal();
     }
+});
+
+const submit = () => {
+    clientImageError.value = null;
+
+    // Ensure published_at is set automatically if status is published and field is empty
+    if (form.status === 'published' && (!form.published_at || form.published_at.trim() === '')) {
+        form.published_at = formatNowLocal();
+    }
+
+    form.post(props.submitRoute, {
+        preserveScroll: true,
+        forceFormData: true,
+    });
 };
 
 const cancel = () => {
@@ -89,7 +130,7 @@ const cancel = () => {
                     <FormTextarea
                         v-model="form.excerpt"
                         label="Ringkasan (Excerpt)"
-                        placeholder="Ringkasan singkat artikel"
+                        placeholder="Ringkasan singkat artikel (opsional - akan dibuat otomatis jika dikosongkan)"
                         :error="form.errors.excerpt"
                         :rows="3"
                     />
@@ -108,14 +149,14 @@ const cancel = () => {
                     <FormInput
                         v-model="form.meta_title"
                         label="Meta Title"
-                        placeholder="Judul untuk mesin pencari"
+                        placeholder="Judul untuk mesin pencari (opsional)"
                         :error="form.errors.meta_title"
                     />
                     
                     <FormTextarea
                         v-model="form.meta_description"
                         label="Meta Description"
-                        placeholder="Deskripsi untuk mesin pencari"
+                        placeholder="Deskripsi untuk mesin pencari (opsional)"
                         :error="form.errors.meta_description"
                         :rows="3"
                     />
@@ -148,9 +189,10 @@ const cancel = () => {
                         <FormDatePicker
                             v-if="form.status === 'published'"
                             v-model="form.published_at"
-                            label="Tanggal Publikasi"
+                            label="Tanggal & Waktu Publikasi"
                             type="datetime-local"
                             :error="form.errors.published_at"
+                            :show-now-button="true"
                         />
                         
                         <div class="pt-2">
@@ -165,13 +207,14 @@ const cancel = () => {
                 </div>
                 
                 <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-gray-100">Media Utama</h3>
+                    <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-gray-100">Media Utama (Opsional)</h3>
                     
                     <ImageUploader
                         v-model="form.featured_image"
                         :image-url="article?.featured_image_path ? `/storage/${article.featured_image_path}` : null"
                         label="Gambar Utama (Featured Image)"
-                        :error="form.errors.featured_image"
+                        :error="form.errors.featured_image || clientImageError || undefined"
+                        @error="(msg) => clientImageError = msg"
                     />
                 </div>
             </div>

@@ -38,7 +38,7 @@ const copyLink = () => {
             <component :is="Icons.MessageSquareWarningIcon" class="w-4 h-4" /> <!-- Placeholder for Twitter/X Icon -->
         </button>
         <button @click="shareToWhatsApp" class="p-2 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/40 rounded-full transition-colors" aria-label="Share to WhatsApp">
-            <component :is="Icons.MenuIcon" class="w-4 h-4" /> <!-- Placeholder for WhatsApp Icon -->
+            <component :is="Icons.PhoneIcon" class="w-4 h-4" /> <!-- Placeholder for WhatsApp Icon -->
         </button>
         <button @click="copyLink" class="p-2 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors" aria-label="Copy Link">
             <component :is="Icons.FileIcon" class="w-4 h-4" /> <!-- Placeholder for Copy Icon -->

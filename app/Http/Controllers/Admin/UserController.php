@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -25,6 +26,8 @@ final class UserController extends Controller
      */
     public function index(): Response
     {
+        Gate::authorize('viewAny', User::class);
+
         $users = User::with('roles')->latest()->paginate(15);
 
         return Inertia::render('Admin/Users/Index', [
@@ -37,6 +40,8 @@ final class UserController extends Controller
      */
     public function create(): Response
     {
+        Gate::authorize('create', User::class);
+
         $roles = Role::all();
 
         return Inertia::render('Admin/Users/Create', [
@@ -49,6 +54,8 @@ final class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
+        Gate::authorize('create', User::class);
+
         $data = $request->validated();
 
         /** @var string $role */
@@ -64,6 +71,8 @@ final class UserController extends Controller
      */
     public function edit(User $user): Response
     {
+        Gate::authorize('update', $user);
+
         $roles = Role::all();
 
         return Inertia::render('Admin/Users/Edit', [
@@ -77,6 +86,8 @@ final class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
+        Gate::authorize('update', $user);
+
         $data = $request->validated();
 
         $this->userService->updateProfile($user, $data);
@@ -97,6 +108,8 @@ final class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        Gate::authorize('delete', $user);
+
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus.');

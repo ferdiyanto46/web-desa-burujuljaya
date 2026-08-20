@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\ArticleStatus;
+use App\Enums\PublicationStatus;
 use App\Models\Announcement;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -34,9 +34,9 @@ final class AnnouncementFactory extends Factory
             'title' => $this->faker->sentence(),
             'excerpt' => $this->faker->paragraph(2),
             'content' => '<p>'.implode('</p><p>', $this->faker->paragraphs(4)).'</p>',
-            'status' => ArticleStatus::Draft,
+            'status' => PublicationStatus::Draft,
             'is_pinned' => false,
-            'end_date' => null,
+            'featured_image_path' => null,
             'published_at' => null,
         ];
     }
@@ -47,7 +47,7 @@ final class AnnouncementFactory extends Factory
     public function published(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Published,
+            'status' => PublicationStatus::Published,
             'published_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
         ]);
     }
@@ -58,7 +58,7 @@ final class AnnouncementFactory extends Factory
     public function scheduled(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Scheduled,
+            'status' => PublicationStatus::Scheduled,
             'published_at' => $this->faker->dateTimeBetween('now', '+1 month'),
         ]);
     }
@@ -69,7 +69,7 @@ final class AnnouncementFactory extends Factory
     public function archived(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ArticleStatus::Archived,
+            'status' => PublicationStatus::Archived,
         ]);
     }
 
@@ -80,26 +80,6 @@ final class AnnouncementFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_pinned' => true,
-        ]);
-    }
-
-    /**
-     * Indicate that the announcement will expire in the future.
-     */
-    public function withEndDate(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'end_date' => $this->faker->dateTimeBetween('+1 week', '+1 month'),
-        ]);
-    }
-
-    /**
-     * Indicate that the announcement has already expired.
-     */
-    public function expired(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'end_date' => $this->faker->dateTimeBetween('-1 month', 'yesterday'),
         ]);
     }
 }

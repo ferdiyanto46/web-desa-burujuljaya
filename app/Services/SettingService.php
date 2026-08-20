@@ -27,9 +27,7 @@ final class SettingService
      */
     public function getAll(): Collection
     {
-        return $this->cache->rememberForever(self::CACHE_KEY, function () {
-            return Setting::all();
-        });
+        return Setting::all();
     }
 
     /**
@@ -84,9 +82,7 @@ final class SettingService
      */
     public function forPublic(): array
     {
-        $settings = $this->cache->rememberForever(self::PUBLIC_CACHE_KEY, function () {
-            return Setting::public()->get();
-        });
+        $settings = Setting::public()->get();
 
         $result = [];
         foreach ($settings as $setting) {

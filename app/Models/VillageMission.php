@@ -32,6 +32,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property-read VillageProfile          $villageProfile
+ *
+ * @method static Builder<static>|VillageMission newModelQuery()
+ * @method static Builder<static>|VillageMission newQuery()
+ * @method static Builder<static>|VillageMission ordered()
+ * @method static Builder<static>|VillageMission query()
+ * @method static Builder<static>|VillageMission whereContent($value)
+ * @method static Builder<static>|VillageMission whereCreatedAt($value)
+ * @method static Builder<static>|VillageMission whereId($value)
+ * @method static Builder<static>|VillageMission whereSortOrder($value)
+ * @method static Builder<static>|VillageMission whereUpdatedAt($value)
+ * @method static Builder<static>|VillageMission whereVillageProfileId($value)
+ *
+ * @mixin \Eloquent
  */
 final class VillageMission extends Model
 {
@@ -52,6 +65,21 @@ final class VillageMission extends Model
         return [
             'sort_order' => 'integer',
         ];
+    }
+
+    /**
+     * @var list<string>
+     */
+    protected $appends = [
+        'statement',
+    ];
+
+    /**
+     * Alias content as statement for compatibility.
+     */
+    public function getStatementAttribute(): string
+    {
+        return $this->content ?? '';
     }
 
     // ──────────────────────────────────────────────────────────────────────────

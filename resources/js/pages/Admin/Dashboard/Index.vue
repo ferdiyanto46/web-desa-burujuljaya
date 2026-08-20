@@ -12,20 +12,27 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 
 defineProps<{
     statistics: {
-        articles: number;
-        announcements: number;
-        agendas: number;
-        documents: number;
-        complaints: number;
-        products: number;
-        umkms: number;
-        tourisms: number;
+        total_articles: number;
+        total_announcements: number;
+        total_gallery_items: number;
+        total_tourism: number;
+        total_umkm: number;
+        total_products: number;
+        total_village_services: number;
+        total_faq: number;
+        total_contact_entries: number;
+        total_village_pages: number;
+        articles_published: number;
+        articles_draft: number;
+        announcements_published: number;
+        announcements_draft: number;
     };
     recentArticles: Array<{
         id: number;
         title: string;
         status: string;
         published_at: string | null;
+        views: number;
         user?: {
             name: string;
         };
@@ -74,17 +81,19 @@ defineProps<{
             <!-- Statistic Grid -->
             <StatisticGrid :statistics="statistics" />
 
+            <!-- Quick Actions Full Width -->
+            <QuickActions />
+
             <!-- Main Widgets Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Left Column (Span 2) -->
-                <div class="lg:col-span-2 space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Left Column -->
+                <div class="space-y-6">
                     <RecentArticles :articles="recentArticles" />
                     <RecentComplaints :complaints="recentComplaints" />
                 </div>
                 
-                <!-- Right Column (Span 1) -->
+                <!-- Right Column -->
                 <div class="space-y-6">
-                    <QuickActions />
                     <RecentActivities :activities="recentActivities" />
                     <SystemStatus :systemStatus="systemStatus" />
                 </div>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\HasUlid;
+use Database\Factories\ActivityLogFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 final class ActivityLog extends Model
 {
+    /** @use HasFactory<ActivityLogFactory> */
     use HasFactory;
+
     use HasUlid;
 
     /**
@@ -25,7 +28,7 @@ final class ActivityLog extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'batch_uuid',
@@ -78,6 +81,7 @@ final class ActivityLog extends Model
      *
      * @param  array<string>|string  $logNames
      */
+    /** @param Builder<static> $query */
     public function scopeInLog(Builder $query, array|string $logNames): void
     {
         $logNames = (array) $logNames;
@@ -87,6 +91,7 @@ final class ActivityLog extends Model
     /**
      * Scope a query to only include logs caused by the given model.
      */
+    /** @param Builder<static> $query */
     public function scopeCausedBy(Builder $query, Model $causer): void
     {
         $query->where('causer_type', $causer->getMorphClass())
@@ -96,6 +101,7 @@ final class ActivityLog extends Model
     /**
      * Scope a query to only include logs for the given subject model.
      */
+    /** @param Builder<static> $query */
     public function scopeForSubject(Builder $query, Model $subject): void
     {
         $query->where('subject_type', $subject->getMorphClass())

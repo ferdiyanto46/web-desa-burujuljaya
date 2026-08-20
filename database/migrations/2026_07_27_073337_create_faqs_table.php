@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\PublicationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,15 +16,29 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->char('ulid', 26)->unique();
+            $table->ulid('ulid')->unique();
             $table->string('question');
-            $table->text('answer');
-            $table->boolean('is_active')->default(true);
+            $table->string('slug')->unique();
+            $table->longText('answer');
+            $table->string('category')->nullable();
             $table->integer('sort_order')->default(0);
-            $table->timestamps();
+            $table->boolean('is_featured')->default(false);
+            $table->string('status')->default(PublicationStatus::Draft->value);
+            $table->timestamp('published_at')->nullable();
+            $table->integer('view_count')->default(0);
 
-            // Index optimized for active FAQ list ordering
-            $table->index(['is_active', 'sort_order']);
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('canonical_url')->nullable();
+
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->index('slug');
+            $table->index('status');
+            $table->index('published_at');
         });
     }
 

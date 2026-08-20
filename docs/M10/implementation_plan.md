@@ -11,7 +11,7 @@ Menerjemahkan draf *Design Document* M10 yang telah direvisi ke dalam basis bari
   - `ComplaintAttachmentObserver` yang mengendus event mutasi memori (`updated`, `forceDeleted`). Keduanya diproteksi kelambatan transaksional `$afterCommit = true`.
 - **4 Factories**: Merajut properti data palsu untuk semua keempat model entitas di atas (lengkap dengan tipe aktor).
 - **2 Seeders**: `ComplaintCategorySeeder` untuk *lookup* konstan dan `ComplaintSeeder` yang menjalankan fabrikasi menggunakan iterasi `recycle()` serta isolasi tarikan data kewajaran `.limit(10)` demi mencegah _Out of Memory_ di masa _development_.
-- Modifikasi pemanggil utama `DatabaseSeeder.php`.
+- Modifikasi pemanggil utama `DatabaseSeeder. php`.
 
 ## 3. Dependency Check
 - Keberhasilan _Foreign Key_ `user_id` di dalam tabel `complaint_histories` bergantung utuh pada eksistensi **Modul 1 (Users)**. (Aturan `nullOnDelete()` menuntut sistem untuk tidak panik jika *User* dihapus).

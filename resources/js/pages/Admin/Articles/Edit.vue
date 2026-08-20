@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 import { ArrowLeftIcon } from 'lucide-vue-next';
+import { computed } from 'vue';
 import ArticleForm from '@/components/articles/ArticleForm.vue';
 import DashboardContainer from '@/components/dashboard/DashboardContainer.vue';
 import PageTitle from '@/components/dashboard/PageTitle.vue';
@@ -8,11 +9,21 @@ import { route } from '@/lib/route';
 import type { Article, ArticleCategory } from '@/types';
 
 interface Props {
-    article: Article;
+    article: Article | { data: Article };
     categories: ArticleCategory[];
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const resolvedArticle = computed<Article>(() => {
+    return ((props.article as any)?.data || props.article) as Article;
+});
+
+const submitRoute = computed(() => {
+    const art = resolvedArticle.value;
+    const key = art?.ulid || art?.id;
+    return route('admin.articles.update', { article: key });
+});
 </script>
 
 <template>
@@ -30,16 +41,16 @@ defineProps<Props>();
                 </button>
                 <PageTitle 
                     title="Edit Artikel" 
-                    :description="`Melakukan perubahan pada artikel: ${article.title}`"
+                    :description="`Melakukan perubahan pada artikel: ${resolvedArticle.title || ''}`"
                 />
             </div>
         </template>
 
         <div class="mt-6">
             <ArticleForm 
-                :article="article"
+                :article="resolvedArticle"
                 :categories="categories" 
-                :submit-route="route('admin.articles.update', { article: article.id })"
+                :submit-route="submitRoute"
                 :cancel-route="route('admin.articles.index')"
                 :is-edit="true"
             />

@@ -7,14 +7,18 @@ import { route } from '@/lib/route';
 import type { Article } from '@/types';
 
 interface Props {
-    article: Article;
+    article: Article | { data: Article };
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const resolvedArticle = computed<Article>(() => {
+    return ((props.article as any)?.data || props.article) as Article;
+});
 </script>
 
 <template>
-    <Head :title="`Preview: ${article.title}`" />
+    <Head :title="`Preview: ${resolvedArticle.title || ''}`" />
 
     <DashboardContainer>
         <template #header>
@@ -33,7 +37,7 @@ defineProps<Props>();
                     />
                     <div class="mt-4 sm:mt-0">
                         <button
-                            @click="router.visit(route('admin.articles.edit', { article: article.id }))"
+                            @click="router.visit(route('admin.articles.edit', { article: resolvedArticle.ulid || resolvedArticle.id }))"
                             class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                         >
                             <EditIcon class="-ml-1 mr-2 h-4 w-4" />
@@ -51,58 +55,58 @@ defineProps<Props>();
                     <span 
                         class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                         :class="[
-                            article.status === 'published' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                            article.status === 'draft' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                            resolvedArticle.status === 'published' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                            resolvedArticle.status === 'draft' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                             'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
                         ]"
                     >
-                        {{ article.status.charAt(0).toUpperCase() + article.status.slice(1) }}
+                        {{ (resolvedArticle.status || 'draft').charAt(0).toUpperCase() + (resolvedArticle.status || 'draft').slice(1) }}
                     </span>
-                    <span v-if="article.is_featured" class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                    <span v-if="resolvedArticle.is_featured" class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
                         Pilihan Utama
                     </span>
                 </div>
                 
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl mb-4">
-                    {{ article.title }}
+                    {{ resolvedArticle.title }}
                 </h1>
                 
                 <div class="flex flex-wrap items-center gap-y-2 text-sm text-gray-500 dark:text-gray-400 space-x-4">
                     <div class="flex items-center">
                         <UserIcon class="mr-1.5 h-4 w-4 flex-shrink-0" />
-                        {{ article.author?.name || 'Unknown Author' }}
+                        {{ resolvedArticle.author?.name || 'Admin' }}
                     </div>
                     <div class="flex items-center">
                         <TagIcon class="mr-1.5 h-4 w-4 flex-shrink-0" />
-                        {{ article.category?.name || 'Uncategorized' }}
+                        {{ resolvedArticle.category?.name || 'Uncategorized' }}
                     </div>
-                    <div class="flex items-center" v-if="article.published_at">
+                    <div class="flex items-center" v-if="resolvedArticle.published_at">
                         <CalendarIcon class="mr-1.5 h-4 w-4 flex-shrink-0" />
-                        {{ new Date(article.published_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) }}
+                        {{ new Date(resolvedArticle.published_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) }}
                     </div>
                     <div class="flex items-center">
                         <EyeIcon class="mr-1.5 h-4 w-4 flex-shrink-0" />
-                        {{ article.views || 0 }} Views
+                        {{ resolvedArticle.views || 0 }} Views
                     </div>
                 </div>
             </div>
 
             <!-- Featured Image -->
-            <div v-if="article.featured_image_path" class="w-full h-64 md:h-96 relative">
+            <div v-if="resolvedArticle.featured_image_path || resolvedArticle.cover_image_url" class="w-full h-64 md:h-96 relative">
                 <img 
-                    :src="`/storage/${article.featured_image_path}`" 
-                    :alt="article.title"
+                    :src="resolvedArticle.cover_image_url || `/storage/${resolvedArticle.featured_image_path}`" 
+                    :alt="resolvedArticle.title"
                     class="w-full h-full object-cover"
                 />
             </div>
 
             <!-- Article Body -->
             <div class="p-6 md:p-10">
-                <div v-if="article.excerpt" class="mb-8 border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:border-blue-400 dark:text-gray-400 text-lg">
-                    {{ article.excerpt }}
+                <div v-if="resolvedArticle.excerpt" class="mb-8 border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:border-blue-400 dark:text-gray-400 text-lg">
+                    {{ resolvedArticle.excerpt }}
                 </div>
                 
-                <div class="prose prose-blue max-w-none dark:prose-invert" v-html="article.content"></div>
+                <div class="prose prose-blue max-w-none dark:prose-invert" v-html="resolvedArticle.content"></div>
             </div>
         </div>
     </DashboardContainer>
