@@ -1,0 +1,1 @@
+import{ht as e,pr as t,sr as n}from"./dist-Cffh0AJX.js";function r(r){let i=e(),a=i?.type.emits,o={};return a?.length||console.warn(`No emitted event found. Please check component: ${i?.type.__name}`),a?.forEach(e=>{o[t(n(e))]=(...t)=>r(e,...t)}),o}export{r as t};

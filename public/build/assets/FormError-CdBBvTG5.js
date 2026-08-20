@@ -1,0 +1,1 @@
+import{A as e,Dn as t,Kt as n,Q as r,Y as i,fr as a,st as o}from"./dist-Cffh0AJX.js";var s={class:`mt-1`},c={class:`text-sm font-medium text-red-600 dark:text-red-500`},l=o({__name:`FormError`,props:{message:{}},setup(o){return(l,u)=>t((n(),r(`div`,s,[i(`p`,c,a(o.message),1)],512)),[[e,o.message]])}});export{l as t};
