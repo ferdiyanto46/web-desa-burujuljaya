@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Complaint;
 use App\Services\SettingService;
 use App\Services\VillageProfileService;
 use Illuminate\Http\Request;
@@ -63,6 +64,22 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
                 'roles' => $request->user()?->getRoleNames() ?? [],
                 'permissions' => $request->user()?->getAllPermissions()->pluck('name') ?? [],
+            ],
+            'notifications' => fn () => $request->user() ? [
+                'unread_complaints_count' => Complaint::whereIn('status', ['unread', 'pending'])->count(),
+                'recent_complaints' => Complaint::whereIn('status', ['unread', 'pending'])
+                    ->latest('id')
+                    ->take(5)
+                    ->get()
+                    ->map(fn ($complaint) => [
+                        'id' => $complaint->ulid ?? (string) $complaint->id,
+                        'title' => $complaint->title,
+                        'reporter_name' => $complaint->is_anonymous ? 'Anonim' : $complaint->reporter_name,
+                        'created_at' => $complaint->created_at?->diffForHumans(),
+                    ])->toArray(),
+            ] : [
+                'unread_complaints_count' => 0,
+                'recent_complaints' => [],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [

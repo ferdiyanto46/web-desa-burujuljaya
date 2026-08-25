@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { router } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import { DropdownMenuRoot, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from 'reka-ui';
 import { computed } from 'vue';
 import { Icons } from '@/constants/icons';
 import { route } from '@/lib/route';
-import { useAuthStore } from '@/stores/authStore';
 
-const authStore = useAuthStore();
+const page = usePage();
+const currentUser = computed(() => (page.props.auth as any)?.user);
 
 const userInitials = computed(() => {
-    const name = authStore.currentUser?.name || 'Admin';
+    const name = currentUser.value?.name || 'Admin';
 
     return name.substring(0, 2).toUpperCase();
 });
@@ -27,10 +27,10 @@ const handleLogout = () => {
             </div>
             <div class="hidden sm:flex flex-col items-start text-left">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-200 leading-none">
-                    {{ authStore.currentUser?.name || 'Administrator' }}
+                    {{ currentUser?.name || 'Administrator' }}
                 </span>
                 <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-none">
-                    {{ authStore.currentUser?.email || 'admin@example.com' }}
+                    {{ currentUser?.email || '-' }}
                 </span>
             </div>
             <component :is="Icons.ChevronDownIcon" class="w-4 h-4 text-gray-500 dark:text-gray-400 hidden sm:block ml-1" />
@@ -42,8 +42,8 @@ const handleLogout = () => {
             :sideOffset="8"
         >
             <DropdownMenuLabel class="px-3 py-2 sm:hidden">
-                <div class="font-medium text-gray-900 dark:text-white">{{ authStore.currentUser?.name || 'Administrator' }}</div>
-                <div class="text-xs text-gray-500 dark:text-gray-400">{{ authStore.currentUser?.email || 'admin@example.com' }}</div>
+                <div class="font-medium text-gray-900 dark:text-white">{{ currentUser?.name || 'Administrator' }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">{{ currentUser?.email || '-' }}</div>
             </DropdownMenuLabel>
             
             <DropdownMenuSeparator class="h-px bg-gray-200 dark:bg-gray-700 my-1 sm:hidden" />
