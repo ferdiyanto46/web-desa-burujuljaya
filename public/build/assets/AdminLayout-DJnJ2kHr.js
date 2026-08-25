@@ -1,0 +1,1 @@
+import{$t as e,Kt as t,Tn as n,X as r,nt as i,st as a}from"./dist-Cffh0AJX.js";import{t as o}from"./DashboardContainer-CKMdrSEw.js";var s=a({__name:`AdminLayout`,setup(a){return(a,s)=>(t(),r(o,null,i({default:n(()=>[e(a.$slots,`default`)]),_:2},[a.$slots.header?{name:`header`,fn:n(()=>[e(a.$slots,`header`)]),key:`0`}:void 0]),1024))}});export{s as t};

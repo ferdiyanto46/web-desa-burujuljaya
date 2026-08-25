@@ -199,6 +199,11 @@ const handleDelete = async (pos: ApparatusPosition) => {
         const data = await response.json();
 
         if (!response.ok) {
+            if (response.status === 404) {
+                localPositions.value = localPositions.value.filter(p => p.id !== pos.id);
+                emit('positions-changed', localPositions.value);
+                throw new Error(`Jabatan "${pos.name}" sudah tidak ada atau telah dihapus sebelumnya.`);
+            }
             throw new Error(data.message || data.error || 'Gagal menghapus jabatan.');
         }
 
