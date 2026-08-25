@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ApparatusPosition;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -101,21 +102,31 @@ final class ApparatusPositionController extends Controller
             $message = "Jabatan '{$apparatusPosition->name}' tidak dapat dihapus karena sedang digunakan oleh {$count} perangkat desa. Silakan ubah jabatan perangkat terkait terlebih dahulu.";
 
             if ($request->wantsJson()) {
-                return response()->json(['error' => $message], 422);
+                return response()->json(['message' => $message, 'error' => $message], 422);
             }
 
             return back()->with('error', $message);
         }
 
-        $name = $apparatusPosition->name;
-        $apparatusPosition->delete();
+        try {
+            $name = $apparatusPosition->name;
+            $apparatusPosition->delete();
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'message' => "Jabatan '{$name}' berhasil dihapus.",
-            ]);
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => "Jabatan '{$name}' berhasil dihapus.",
+                ]);
+            }
+
+            return back()->with('success', "Jabatan '{$name}' berhasil dihapus.");
+        } catch (QueryException $e) {
+            $message = "Jabatan '{$apparatusPosition->name}' tidak dapat dihapus karena masih terikat dengan data perangkat desa.";
+
+            if ($request->wantsJson()) {
+                return response()->json(['message' => $message, 'error' => $message], 422);
+            }
+
+            return back()->with('error', $message);
         }
-
-        return back()->with('success', "Jabatan '{$name}' berhasil dihapus.");
     }
 }
